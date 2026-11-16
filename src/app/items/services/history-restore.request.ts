@@ -10,7 +10,7 @@ export interface HistoryRestore {
 
 /**
  * Queues a restore until navigation to the task view has finished, then exposes it until a loaded
- * editable task on that attempt consumes it.
+ * task on that attempt consumes it (editable for the participant, read-only for an observer).
  */
 @Injectable()
 export class HistoryRestoreRequest {

@@ -4,6 +4,8 @@ import { canShowEventsAndEdits, HistoryViewMode, initialHistoryViewMode } from '
 export interface HistoryModeMemory {
   userChoseEventsOnly: boolean,
   seenNavigationKey: string,
+  /** Survives an attempt-id URL change while Events & Edits is still loading the task. */
+  pendingEditsLoad: boolean,
 }
 
 export type HistoryModeStep =
@@ -14,9 +16,9 @@ export type HistoryModeStep =
 export function followHistoryMode(
   memory: HistoryModeMemory,
   nav: string,
-  isObserving: boolean,
-  attemptId: string | undefined,
+  editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
+  observedUserId: string | null,
   mode: HistoryViewMode,
   actions: {
     clearExpansions: () => void,
@@ -24,7 +26,7 @@ export function followHistoryMode(
     reload: () => void,
   },
 ): void {
-  const step = historyModeStep(memory, nav, isObserving, attemptId, loaded, mode);
+  const step = historyModeStep(memory, nav, editsAttemptId, loaded, observedUserId, mode);
   if (step.type === 'reload') {
     actions.reload();
     return;
@@ -34,14 +36,14 @@ export function followHistoryMode(
   actions.applyMode(step.mode);
 }
 
-/** User picked a segment. `loadTask` runs when edits need the URL attempt loaded first. */
+/** User picked a segment. `loadTask` runs when edits need the attempt loaded first. */
 export function chooseHistoryMode(
   memory: HistoryModeMemory,
   mode: HistoryViewMode,
   next: HistoryViewMode,
-  isObserving: boolean,
-  attemptId: string | undefined,
+  editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
+  observedUserId: string | null,
   actions: {
     clearExpansions: () => void,
     applyMode: (mode: HistoryViewMode) => void,
@@ -53,16 +55,19 @@ export function chooseHistoryMode(
   actions.clearExpansions();
   if (next === 'events') {
     memory.userChoseEventsOnly = true;
+    memory.pendingEditsLoad = false;
     actions.applyMode('events');
     return;
   }
   memory.userChoseEventsOnly = false;
-  if (canShowEventsAndEdits(isObserving, attemptId, loaded)) {
+  if (canShowEventsAndEdits(editsAttemptId, loaded, observedUserId)) {
+    memory.pendingEditsLoad = false;
     actions.applyMode('events_and_edits');
     return;
   }
+  memory.pendingEditsLoad = true;
   actions.showEditsLoading();
-  if (attemptId) actions.loadTask(attemptId);
+  if (editsAttemptId) actions.loadTask(editsAttemptId);
 }
 
 /**
@@ -72,22 +77,33 @@ export function chooseHistoryMode(
 export function historyModeStep(
   memory: HistoryModeMemory,
   nav: string,
-  isObserving: boolean,
-  attemptId: string | undefined,
+  editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
+  observedUserId: string | null,
   mode: HistoryViewMode,
 ): HistoryModeStep {
   if (nav !== memory.seenNavigationKey) {
     memory.seenNavigationKey = nav;
+    if (memory.pendingEditsLoad) {
+      // Attempt URL changed while loading the observed/own edits attempt — keep waiting.
+      memory.userChoseEventsOnly = false;
+      return { type: 'apply', mode: 'events_and_edits', clearExpansions: true };
+    }
     memory.userChoseEventsOnly = false;
-    return { type: 'apply', mode: initialHistoryViewMode(isObserving, attemptId, loaded), clearExpansions: true };
+    return {
+      type: 'apply',
+      mode: initialHistoryViewMode(editsAttemptId, loaded, observedUserId),
+      clearExpansions: true,
+    };
   }
   if (loaded?.savesEditorHistory === false) {
     memory.userChoseEventsOnly = false;
+    memory.pendingEditsLoad = false;
     return mode === 'events' ? { type: 'none' } : { type: 'apply', mode: 'events', clearExpansions: false };
   }
   if (memory.userChoseEventsOnly) return { type: 'none' };
-  if (!canShowEventsAndEdits(isObserving, attemptId, loaded)) return { type: 'none' };
+  if (!canShowEventsAndEdits(editsAttemptId, loaded, observedUserId)) return { type: 'none' };
+  memory.pendingEditsLoad = false;
   if (mode !== 'events_and_edits') return { type: 'apply', mode: 'events_and_edits', clearExpansions: false };
   return { type: 'reload' };
 }

@@ -77,11 +77,9 @@
                         <div class="item-title">
                           <p class="item-title-caption">{{ checkpointCaption(rowData) }}</p>
                           <div class="history-row-actions">
-                            @if (!observing) {
-                              <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
-                                Restore
-                              </button>
-                            }
+                            <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
+                              Restore
+                            </button>
                             @if ((rowData.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0) > 0) {
                               <button
                                 type="button"
@@ -103,13 +101,11 @@
                         </div>
                         <div class="item-title">
                           <p class="item-title-caption">{{ editCaption(rowData.edit) }}</p>
-                          @if (!observing) {
-                            <div class="history-row-actions">
-                              <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)" i18n>
-                                Restore
-                              </button>
-                            </div>
-                          }
+                          <div class="history-row-actions">
+                            <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)" i18n>
+                              Restore
+                            </button>
+                          </div>
                         </div>
                       </div>
                     } @else {

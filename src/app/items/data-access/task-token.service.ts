@@ -42,4 +42,16 @@ export class TaskTokenService {
     );
   }
 
+  /** Read-only task token for another participant's attempt (observer editor history). */
+  generateForObservedUser(itemId: string, participantId: string, attemptId: string): Observable<TaskToken> {
+    return this.http.post<ActionResponse<unknown>>(
+      `${this.config.apiUrl}/items/${itemId}/participant/${participantId}/attempts/${attemptId}/generate-task-token`,
+      undefined,
+    ).pipe(
+      map(successData),
+      decodeSnakeCase(taskTokenDataSchema),
+      map(data => data.taskToken),
+    );
+  }
+
 }

@@ -45,6 +45,8 @@ export interface ItemTaskConfig {
   initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   readOnly: boolean,
   locale?: string,
+  /** When set with readOnly, request the observed-user task token for this participant. */
+  observedParticipantId?: string,
 }
 
 export class IncompatibleTaskApiVersionError extends Error {
@@ -88,7 +90,16 @@ export class ItemTaskInitService implements OnDestroy {
   // generation strategy, recomputed on config changes only
   private tokenStrategy$ = this.config$.pipe(
     // build strategy separately from switchMap to prevent cancellation of the request
-    map(({ readOnly, initialAnswer, attemptId, route }) => {
+    map(({ readOnly, initialAnswer, attemptId, route, observedParticipantId }) => {
+      // Observer editor history: read-only token for another participant's attempt (no answer required).
+      if (readOnly && observedParticipantId && attemptId !== undefined) {
+        return {
+          strategy: 'observedUserToken' as const,
+          itemId: route.id,
+          participantId: observedParticipantId,
+          attemptId,
+        };
+      }
       if (readOnly) {
         // if readonly -> if initialAnswer is still unknown, wait the next config update to generate token
         if (initialAnswer === undefined) return { strategy: 'wait' as const };
@@ -101,7 +112,7 @@ export class ItemTaskInitService implements OnDestroy {
       // if there are no answer loaded -> we currently want an empty task, so using our own task token
       return { strategy: 'regularToken' as const, itemId: route.id, attemptId };
     }),
-    distinctUntilChanged((prev, cur) => prev.strategy === cur.strategy),
+    distinctUntilChanged((prev, cur) => equal(prev, cur)),
   );
 
   // task token generation (possibly after some delay) (may fail!)
@@ -117,6 +128,9 @@ export class ItemTaskInitService implements OnDestroy {
       let generate$: Observable<TaskToken> = EMPTY; // s.strategy === 'wait'
       if (s.strategy === 'answerToken') generate$ = this.taskTokenService.generateForAnswer(s.answerId);
       if (s.strategy === 'regularToken') generate$ = this.taskTokenService.generate(s.itemId, s.attemptId);
+      if (s.strategy === 'observedUserToken') {
+        generate$ = this.taskTokenService.generateForObservedUser(s.itemId, s.participantId, s.attemptId);
+      }
       // A refresh failure must NOT error `taskToken$`: it is a shared stream also consumed by `submitAnswer()`
       // (answer-token + save-grade), so erroring it would break every later submission. Keep the previous token
       // instead. Initial-load / strategy-change generation keeps propagating errors (handled by load timeout / consumers).
@@ -200,6 +214,11 @@ export class ItemTaskInitService implements OnDestroy {
   /** Guard: throw exception if the config changes, except `initialAnswer` and `attemptId`. */
   guardSubscription = this.config$.pipe(pairwise(), takeUntilDestroyed()).subscribe(([ prev, cur ]) => {
     if (prev.readOnly !== cur.readOnly) throw new Error(`cannot change task config (readonly prev:${prev.readOnly} cur:${cur.readOnly})`);
+    if (prev.observedParticipantId !== cur.observedParticipantId) {
+      throw new Error(
+        `cannot change task config (observedParticipantId prev:${prev.observedParticipantId} cur:${cur.observedParticipantId})`
+      );
+    }
     if (prev.locale !== cur.locale) throw new Error(`cannot change task config (locale prev:${prev.locale} cur:${cur.locale})`);
     if (!equal({ ...prev.route, attemptId: undefined }, { ...cur.route, attemptId: undefined })) {
       throw new Error(`cannot change task config (route prev:${JSON.stringify(prev.route)} cur:${JSON.stringify(cur.route)})`);
@@ -266,9 +285,12 @@ export class ItemTaskInitService implements OnDestroy {
     attemptId: string | undefined,
     initialAnswer: Answer | undefined | null,
     locale?: string,
-    readOnly = false
+    readOnly = false,
+    observedParticipantId?: string,
   ): void {
-    this.configFromItem$.next({ route, url, attemptId, initialAnswer, locale, readOnly });
+    this.configFromItem$.next({
+      route, url, attemptId, initialAnswer, locale, readOnly, observedParticipantId,
+    });
   }
 
   initTask(iframe: HTMLIFrameElement, bindPlatform: (task: Task) => void): void {

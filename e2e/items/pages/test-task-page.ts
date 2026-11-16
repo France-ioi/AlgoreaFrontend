@@ -16,11 +16,17 @@ export interface TestTaskApiOptions {
   taskUrl?: string,
   taskQuery?: string,
   canEdit?: 'none' | 'children' | 'all' | 'all_with_grant',
+  canWatch?: 'none' | 'result' | 'answer' | 'answer_with_grant',
   currentAnswer?: { answer: string, state: string } | null,
   /** When set, GET /answers/:id returns this submission (for View answer). */
   submission?: { id: string, answer: string, state: string } | null,
   /** Override attempts list (for History attempt-number labels). */
   attempts?: TestTaskAttemptFixture[],
+  /**
+   * When set, also mocks GET /users/:id (watchable) and the observed-user task-token endpoint
+   * so History can load that participant's attempt read-only.
+   */
+  observedUserId?: string,
 }
 interface TaskCallLogEntry {
   method: string,
@@ -30,7 +36,12 @@ interface TaskCallLogEntry {
 
 const actionSuccess = { success: true as const, message: 'ok' };
 
-function buildTaskResponse(itemId: string, taskUrl: string, canEdit: TestTaskApiOptions['canEdit'] = 'none'): object {
+function buildTaskResponse(
+  itemId: string,
+  taskUrl: string,
+  canEdit: TestTaskApiOptions['canEdit'] = 'none',
+  canWatch: TestTaskApiOptions['canWatch'] = 'none',
+): object {
   return {
     id: itemId,
     type: 'Task',
@@ -44,7 +55,7 @@ function buildTaskResponse(itemId: string, taskUrl: string, canEdit: TestTaskApi
     permissions: {
       can_view: 'content',
       can_grant_view: 'none',
-      can_watch: 'none',
+      can_watch: canWatch,
       can_edit: canEdit,
       is_owner: true,
       can_request_help: true,
@@ -111,7 +122,7 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
   const taskUrl = options.taskUrl ?? (
     options.taskQuery ? `${TEST_TASK_URL}?${options.taskQuery}` : TEST_TASK_URL
   );
-  const taskResponse = buildTaskResponse(itemId, taskUrl, options.canEdit);
+  const taskResponse = buildTaskResponse(itemId, taskUrl, options.canEdit, options.canWatch);
   const breadcrumbs = [{
     item_id: itemId,
     language_tag: 'en',
@@ -137,11 +148,19 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
     },
   }));
 
-  await page.route(`${apiUrl}/items/${itemId}`, route => {
-    if (route.request().method() === 'PUT') {
-      return route.fulfill({ json: actionSuccess });
+  // Trailing * so ?watched_group_id=… (observation) still matches.
+  await page.route(`${apiUrl}/items/${itemId}*`, async route => {
+    const url = route.request().url();
+    if (url.includes('/breadcrumbs') || url.includes('/attempts') || url.includes('/current-answer')
+      || url.includes('/answers/') || url.includes('/participant/') || url.includes('/log')) {
+      await route.fallback();
+      return;
     }
-    return route.fulfill({ json: taskResponse });
+    if (route.request().method() === 'PUT') {
+      await route.fulfill({ json: actionSuccess });
+      return;
+    }
+    await route.fulfill({ json: taskResponse });
   });
   await page.route(`${apiUrl}/items/${itemId}/breadcrumbs*`, route => route.fulfill({ json: breadcrumbs }));
   await page.route(`${apiUrl}/items/${itemId}/attempts*`, route => route.fulfill({ json: attempts }));
@@ -203,6 +222,26 @@ export async function mockTestTaskItemApi(page: Page, options: TestTaskApiOption
     await page.route(`${apiUrl}/answers/${submission.id}/generate-task-token`, route => route.fulfill({
       json: { ...actionSuccess, data: { task_token: 'mock-answer-task-token' } },
     }));
+  }
+  if (options.observedUserId) {
+    const observedUserId = options.observedUserId;
+    await page.route(`${apiUrl}/users/${observedUserId}`, route => route.fulfill({
+      json: {
+        group_id: observedUserId,
+        login: 'observed-student',
+        temp_user: false,
+        is_current_user: false,
+        ancestors_current_user_is_manager_of: [],
+        current_user_can_watch_user: true,
+        profile: { first_name: 'Observed', last_name: 'Student' },
+      },
+    }));
+    await page.route(
+      `${apiUrl}/items/${itemId}/participant/${observedUserId}/attempts/*/generate-task-token`,
+      route => route.fulfill({
+        json: { ...actionSuccess, data: { task_token: 'mock-observed-user-task-token' } },
+      }),
+    );
   }
   await page.route(`${apiUrl}/items/save-grade`, route => {
     // mirror the backend: a submission validates the item once it reaches the max score

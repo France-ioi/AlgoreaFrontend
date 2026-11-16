@@ -143,7 +143,10 @@ export class ItemContentComponent implements PendingChangesComponent {
    * If readOnly and url flip in the same refresh, the key remounts first (old url) and the url
    * restart follows — an extra load, rare and acceptable.
    */
-  taskDisplayRemountKey = computed(() => String(this.taskConfig()?.readOnly ?? ''));
+  taskDisplayRemountKey = computed(() => {
+    const config = this.taskConfig();
+    return `${config?.readOnly ?? ''}:${config?.observedParticipantId ?? ''}`;
+  });
 
   /**
    * Url bound to the live `alg-item-display`. Follows `item.url` when there is no instance to protect
@@ -197,12 +200,15 @@ export class ItemContentComponent implements PendingChangesComponent {
       takeUntilDestroyed(),
     ).subscribe(() => this.taskRestart$.next());
 
-    // History asked for the URL attempt, but the live iframe was loaded on another one.
+    // History asked for an attempt, but the live iframe was loaded on another one (or own vs observed).
     effect(() => {
-      const pending = this.historyTaskLoad?.pendingAttemptId() ?? null;
+      const pending = this.historyTaskLoad?.pending() ?? null;
       const loaded = this.loadedTask();
       const attemptId = this.itemData().route.attemptId;
-      if (!pending || pending !== attemptId || !loaded || loaded.attemptId === pending) return;
+      if (!pending || pending.attemptId !== attemptId || !loaded) return;
+      const sameAttempt = loaded.attemptId === pending.attemptId;
+      const sameParticipant = loaded.participantId === pending.observedParticipantId;
+      if (sameAttempt && sameParticipant) return;
       this.taskRestart$.next();
     });
   }

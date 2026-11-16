@@ -527,6 +527,95 @@ test.describe('platform-task interaction', () => {
       await expect(page).toHaveURL(/\/history/);
       await expect(page.locator('.item-title-caption').first()).toContainText('Autosave');
     });
+
+    test.describe('while observing a user', () => {
+      const observedUserId = '42';
+      const observedLog = [{
+        at: '2024-06-01T10:01:30Z',
+        activity_type: 'submission',
+        attempt_id: '0',
+        answer_id: 'ans-observed',
+        participant: { id: observedUserId, name: 'observed-student', type: 'User' },
+        item: {
+          id: TEST_TASK_ITEM_ID,
+          type: 'Task',
+          string: { title: 'Platform-task test task' },
+        },
+        score: 80,
+        can_watch_answer: true,
+      }];
+
+      test('defaults to Events only, loads the observed attempt read-only, and restores without writing history', async ({ page }) => {
+        await mockTestTaskItemApi(page, {
+          taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+          canWatch: 'answer',
+          observedUserId,
+        });
+        await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({ json: observedLog }));
+
+        let observedTokenPosts = 0;
+        page.on('request', request => {
+          if (
+            request.method() === 'POST'
+            && request.url().includes(`/participant/${observedUserId}/attempts/`)
+            && request.url().includes('/generate-task-token')
+          ) {
+            observedTokenPosts += 1;
+          }
+        });
+
+        await page.goto(`/a/${TEST_TASK_ITEM_ID};p=;a=0;og=${observedUserId};ou=1/history`);
+        await expect(page.getByRole('button', { name: 'Refresh' })).toBeVisible();
+
+        const selection = page.getByTestId('selection-control-value');
+        await expect(selection).toHaveCount(2);
+        await expect(selection.filter({ hasText: 'Events only' })).toHaveClass(/active/);
+        await expect(selection.filter({ hasText: 'Events & Edits' })).toBeVisible();
+
+        await selection.filter({ hasText: 'Events & Edits' }).click();
+        await expect.poll(() => observedTokenPosts).toBeGreaterThanOrEqual(1);
+        await testTaskPage.waitForCall('task.getHistory');
+        await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
+
+        await page.getByRole('row').filter({ hasText: 'Manual' }).getByRole('button', { name: 'Restore' }).click();
+        await expect(page).toHaveURL(/\/task\/editor/);
+        const reload = await testTaskPage.waitForCall('task.reloadHistory');
+        expect(reload.params).toEqual({ elementId: 3 });
+        await expect(testTaskPage.taskFrame.getByTestId('answer-input')).toHaveValue('manual');
+
+        await page.getByRole('link', { name: 'History' }).click();
+        await expect(page).toHaveURL(/\/history/);
+        // Observer History always reopens on Events only; re-select edits to check history was not written.
+        await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events only' })).toHaveClass(/active/);
+        await page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits' }).click();
+        await testTaskPage.waitForCall('task.getHistory');
+        // Read-only restore must not push an Autosave checkpoint into the student's history.
+        await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
+      });
+
+      test('names the attempt from the newest activity-log row when several attempts exist', async ({ page }) => {
+        await mockTestTaskItemApi(page, {
+          taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
+          canWatch: 'answer',
+          observedUserId,
+          attempts: [
+            { id: '0', started_at: '2024-01-01T00:00:00Z' },
+            { id: '1', started_at: '2024-02-01T00:00:00Z' },
+          ],
+        });
+        await page.route(`${apiUrl}/items/${TEST_TASK_ITEM_ID}/log*`, route => route.fulfill({
+          json: [{
+            ...observedLog[0],
+            attempt_id: '1',
+          }],
+        }));
+
+        await page.goto(`/a/${TEST_TASK_ITEM_ID};p=;a=0;og=${observedUserId};ou=1/history`);
+        await expect(page.getByRole('button', { name: 'Refresh' })).toBeVisible();
+        await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits of attempt #2' }))
+          .toBeVisible();
+      });
+    });
   });
 
   test.describe('device proxy', () => {
