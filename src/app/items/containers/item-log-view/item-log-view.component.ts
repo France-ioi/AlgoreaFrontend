@@ -44,10 +44,12 @@ import { historyEditsPageSize } from './history-edits-pager';
 import { HistoryLogColumn, historyLogColumns } from './history-log-columns';
 import {
   attemptNumberForLabel, HistoryViewMode, historyModeOptions,
+  newestActivityLogAttemptId, observerEditsAttemptId,
   shouldShowHistoryModeSelection,
 } from './history-view-mode';
 import { HistoryTaskLoadRequest } from '../../services/history-task-load.request';
 import { HistoryRestoreRequest } from '../../services/history-restore.request';
+import { canCurrentUserWatchAnswers } from 'src/app/items/models/item-watch-permission';
 
 @Component({
   selector: 'alg-item-log-view',
@@ -94,7 +96,11 @@ export class ItemLogViewComponent {
   readonly loadedTask = toSignal(this.loadedTask$, { initialValue: null });
 
   readonly mode = signal<HistoryViewMode>('events');
-  private readonly modeMemory: HistoryModeMemory = { userChoseEventsOnly: false, seenNavigationKey: '' };
+  private readonly modeMemory: HistoryModeMemory = {
+    userChoseEventsOnly: false,
+    seenNavigationKey: '',
+    pendingEditsLoad: false,
+  };
   readonly expansion = new HistoryCheckpointExpansion();
   private readonly editsReload$ = new Subject<void>();
   readonly editsState = signal<FetchState<HistoryListRow[]>>(fetchingState());
@@ -118,20 +124,20 @@ export class ItemLogViewComponent {
     return [ data.item.id, data.route.attemptId ?? '', this.isObserving() ? '1' : '0', observed?.id ?? '' ].join('|');
   });
 
-  readonly showModeSelection = computed(() =>
-    shouldShowHistoryModeSelection(
-      this.itemData().item.type,
-      this.observedGroupRoute(),
-      this.isObserving(),
-      this.itemData().route.attemptId,
-      this.loadedTask(),
-    )
-  );
-  readonly modeOptions = computed(() =>
-    historyModeOptions(attemptNumberForLabel(this.itemData().results, this.itemData().route.attemptId))
-  );
-  readonly selectedModeIndex = computed(() =>
-    Math.max(this.modeOptions().findIndex(option => option.value === this.mode()), 0)
+  /**
+   * Observed user id when watching one user; null otherwise (own History or group).
+   * Prefer the item route (URL `og`/`ou`) so Events & Edits can load before observation info fetches.
+   */
+  private readonly observedUserId = computed((): string | null => {
+    const fromItem = this.itemData().route.observedGroup;
+    if (fromItem?.isUser) return fromItem.id;
+    const route = this.observedGroupRoute();
+    return route && isUser(route) ? route.id : null;
+  });
+
+  /** Group/user under observation for History mode visibility (item route first). */
+  private readonly observedGroupForMode = computed(() =>
+    this.itemData().route.observedGroup ?? this.observedGroupRoute()
   );
 
   datapager = new DataPager({
@@ -155,6 +161,37 @@ export class ItemLogViewComponent {
       map(([ fetchData, profile ]) => mapStateData(fetchData, logs => activityLogsToEventRows(logs, profile.groupId))),
     ),
     { initialValue: fetchingState<HistoryListRow[]>() },
+  );
+
+  /**
+   * Attempt whose editor history the Events & Edits option refers to.
+   * Own: URL attempt. Observer: loaded observed task, else newest activity-log row.
+   */
+  readonly editsAttemptId = computed((): string | undefined => {
+    const observedUserId = this.observedUserId();
+    if (!observedUserId) return this.itemData().route.attemptId;
+    const logRows = this.eventsListState().data ?? [];
+    return observerEditsAttemptId(
+      this.loadedTask(),
+      observedUserId,
+      newestActivityLogAttemptId(logRows),
+    );
+  });
+
+  readonly showModeSelection = computed(() =>
+    shouldShowHistoryModeSelection(
+      this.itemData().item.type,
+      this.observedGroupForMode(),
+      canCurrentUserWatchAnswers(this.itemData().item),
+      this.editsAttemptId(),
+      this.loadedTask(),
+    )
+  );
+  readonly modeOptions = computed(() =>
+    historyModeOptions(attemptNumberForLabel(this.itemData().results, this.editsAttemptId()))
+  );
+  readonly selectedModeIndex = computed(() =>
+    Math.max(this.modeOptions().findIndex(option => option.value === this.mode()), 0)
   );
 
   readonly listState = computed((): FetchState<HistoryListRow[]> => {
@@ -186,13 +223,14 @@ export class ItemLogViewComponent {
     effect(() => {
       const nav = this.navigationKey();
       const loaded = this.loadedTask();
-      const isObserving = this.isObserving();
+      const editsAttemptId = this.editsAttemptId();
+      const observedUserId = this.observedUserId();
       untracked(() => followHistoryMode(
         this.modeMemory,
         nav,
-        isObserving,
-        this.itemData().route.attemptId,
+        editsAttemptId,
         loaded,
+        observedUserId,
         this.mode(),
         {
           clearExpansions: () => this.expansion.clear(),
@@ -209,7 +247,7 @@ export class ItemLogViewComponent {
         this.editsState.set(fetchingState(previous));
         return this.editsFacade.reload(
           loaded?.task,
-          this.itemData().route.attemptId,
+          this.editsAttemptId(),
           loaded?.savesEditorHistory,
           loaded?.attemptId,
         );
@@ -227,13 +265,14 @@ export class ItemLogViewComponent {
   onModeChange(index: number): void {
     const option = this.modeOptions()[index];
     if (!option) return;
+    const observedUserId = this.observedUserId();
     chooseHistoryMode(
       this.modeMemory,
       this.mode(),
       option.value,
-      this.isObserving(),
-      this.itemData().route.attemptId,
+      this.editsAttemptId(),
       this.loadedTask(),
+      observedUserId,
       {
         clearExpansions: () => this.expansion.clear(),
         applyMode: next => this.applyMode(next),
@@ -241,7 +280,7 @@ export class ItemLogViewComponent {
           this.mode.set('events_and_edits');
           this.editsState.set(fetchingState());
         },
-        loadTask: attemptId => this.historyTaskLoad?.request(attemptId),
+        loadTask: attemptId => this.requestTaskLoad(attemptId, observedUserId),
       },
     );
   }
@@ -252,10 +291,15 @@ export class ItemLogViewComponent {
   }
 
   onRestore(elementId: number): void {
-    const attemptId = this.itemData().route.attemptId;
+    const attemptId = this.editsAttemptId() ?? this.itemData().route.attemptId;
     if (!attemptId) return;
+    const observedUserId = this.observedUserId();
+    this.requestTaskLoad(attemptId, observedUserId);
     this.restoreRequest?.queue(elementId, attemptId);
-    this.itemRouter.navigateTo(itemRouteWith(this.itemData().route, { answer: undefined }), {
+    const route = this.itemData().route.attemptId === attemptId
+      ? this.itemData().route
+      : itemRouteWith(this.itemData().route, { attemptId });
+    this.itemRouter.navigateTo(itemRouteWith(route, { answer: undefined }), {
       page: [ 'task', 'editor' ], useCurrentObservation: true,
     });
   }
@@ -271,7 +315,7 @@ export class ItemLogViewComponent {
     }
     const loaded = this.loadedTask();
     this.editsFacade.loadMore(
-      this.editsState().isFetching, this.editsState().data, loaded?.task, this.itemData().route.attemptId,
+      this.editsState().isFetching, this.editsState().data, loaded?.task, this.editsAttemptId(),
     );
   }
 
@@ -296,5 +340,22 @@ export class ItemLogViewComponent {
     this.mode.set(next);
     if (next === 'events') this.resetRows();
     else this.editsReload$.next();
+  }
+
+  /**
+   * Ask the item host to mount the attempt. When observing a user, load their attempt read-only
+   * (observed-user token). Aligns the URL attempt first when it differs from the edits attempt.
+   */
+  private requestTaskLoad(attemptId: string, observedUserId: string | null): void {
+    if (this.itemData().route.attemptId !== attemptId) {
+      this.itemRouter.navigateTo(itemRouteWith(this.itemData().route, { attemptId }), {
+        page: [ 'history' ],
+        useCurrentObservation: true,
+      });
+    }
+    this.historyTaskLoad?.request(
+      attemptId,
+      observedUserId ? { observedParticipantId: observedUserId } : undefined,
+    );
   }
 }

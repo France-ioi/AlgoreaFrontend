@@ -257,12 +257,23 @@
 
   chan.bind('task.load', function (trans, loadViews) {
     logCall('task.load', loadViews);
-    state.loaded = true;
-    loadedMarker.hidden = false;
-    loadedMarker.setAttribute('aria-hidden', 'false');
-    statusEl.textContent = 'Ready';
-    statusEl.className = 'ready';
-    return delayedComplete(trans, true, config.loadDelay);
+    function markReadyAndComplete() {
+      state.loaded = true;
+      loadedMarker.hidden = false;
+      loadedMarker.setAttribute('aria-hidden', 'false');
+      statusEl.textContent = 'Ready';
+      statusEl.className = 'ready';
+      delayedComplete(trans, true, config.loadDelay);
+    }
+    // Sync readOnly from the platform (observer / View answer) so reloadHistory skips writing.
+    invokePlatform('platform.getTaskParams', []).then(function (params) {
+      if (params && typeof params.readOnly === 'boolean') {
+        config.readOnly = params.readOnly;
+      }
+      markReadyAndComplete();
+    }).catch(function () {
+      markReadyAndComplete();
+    });
   });
 
   chan.bind('task.unload', function () {

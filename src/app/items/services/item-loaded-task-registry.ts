@@ -7,6 +7,11 @@ export interface LoadedItemTask {
   attemptId: string,
   /** True when negotiated ≥ 3 and metadata.savesHistory. Undefined until metadata is known. */
   savesEditorHistory: boolean | undefined,
+  /**
+   * Set when the iframe was loaded with an observed-user (or answer) token for that participant.
+   * Undefined means the signed-in user's own token — must not count as the observed user's task.
+   */
+  participantId?: string,
 }
 
 /**

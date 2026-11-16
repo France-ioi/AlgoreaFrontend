@@ -1,7 +1,7 @@
 import { effect, inject, Injectable, OnDestroy, signal, untracked } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { createSelector, Store } from '@ngrx/store';
-import { EMPTY, fromEvent, merge, Observable, of, Subject } from 'rxjs';
+import { combineLatest, EMPTY, fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
   defaultIfEmpty,
@@ -29,6 +29,7 @@ import { readyData } from 'src/app/utils/operators/state';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
 import { ItemData } from './models/item-data';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
+import { HistoryTaskLoadRequest } from './services/history-task-load.request';
 import { TaskConfig } from './services/item-task.service';
 import { fromItemContent } from './store';
 
@@ -45,11 +46,16 @@ export class ItemTaskFlowService implements OnDestroy {
   private confirmationModalService = inject(ConfirmationModalService);
   private itemRouter = inject(ItemRouter);
   private initialAnswerDataSource = inject(InitialAnswerDataSource);
+  private historyTaskLoad = inject(HistoryTaskLoadRequest, { optional: true });
   private config = inject(APPCONFIG);
 
   private itemRoute$ = this.store.select(fromItemContent.selectActiveContentRoute).pipe(filter(isNotNull));
   private itemDataState = this.store.selectSignal(fromItemContent.selectActiveContentData);
   private activeContentRoute = toSignal(this.itemRoute$);
+  /** Must be created in an injection context (not inside switchMap). */
+  private readonly historyPending$ = this.historyTaskLoad
+    ? toObservable(this.historyTaskLoad.pending)
+    : of(null);
 
   private saveHandler: () => Observable<FetchState<void>> = () => of(readyState<void>(undefined));
   private teardownHandler: () => Observable<void> = () => of(undefined);
@@ -79,13 +85,26 @@ export class ItemTaskFlowService implements OnDestroy {
       if (!isTask) return of(null);
       const userLocale = this.localeService.currentLang?.tag;
       if (!userLocale) throw new Error('unexpected: locale not defined');
-      return this.initialAnswerDataSource.answer$.pipe(
-        catchError(() => EMPTY),
-        map(initialAnswer => ({
-          readOnly: !!route.answer,
-          initialAnswer,
-          locale: userLocale,
-        }))
+      return combineLatest([
+        this.initialAnswerDataSource.answer$.pipe(catchError(() => EMPTY)),
+        this.historyPending$,
+      ]).pipe(
+        map(([ initialAnswer, historyPending ]) => {
+          // Viewing a specific answer wins over History's observed-user load.
+          if (route.answer) {
+            return { readOnly: true, initialAnswer, locale: userLocale };
+          }
+          const observedParticipantId = historyPending?.observedParticipantId;
+          if (observedParticipantId) {
+            return {
+              readOnly: true,
+              initialAnswer: null,
+              locale: userLocale,
+              observedParticipantId,
+            };
+          }
+          return { readOnly: false, initialAnswer, locale: userLocale };
+        }),
       );
     }),
   );

@@ -10,6 +10,11 @@ import { errorState, fetchingState, FetchState, readyState } from 'src/app/utils
 
 const testTimeout = 200;
 const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
+const emptyTokenService = {
+  generate: (): Observable<TaskToken> => EMPTY,
+  generateForAnswer: (): Observable<TaskToken> => EMPTY,
+  generateForObservedUser: (): Observable<TaskToken> => EMPTY,
+};
 
 function createMockTask(): jasmine.SpyObj<Task> {
   const task = jasmine.createSpyObj<Task>('Task', [ 'getMetaData', 'load', 'updateToken', 'unload', 'destroy', 'bindPlatform' ]);
@@ -28,7 +33,7 @@ describe('ItemTaskInitService – config guard', () => {
         ItemTaskInitService,
         { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
         { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => EMPTY },
-        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+        { provide: TaskTokenService, useValue: emptyTokenService },
       ],
     });
 
@@ -97,7 +102,7 @@ describe('ItemTaskInitService – timeout scenarios', () => {
         ItemTaskInitService,
         { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
         { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
-        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+        { provide: TaskTokenService, useValue: emptyTokenService },
       ],
     });
 
@@ -262,7 +267,7 @@ describe('ItemTaskInitService – API version negotiation', () => {
         ItemTaskInitService,
         { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
         { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
-        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+        { provide: TaskTokenService, useValue: emptyTokenService },
       ],
     });
 
@@ -426,7 +431,7 @@ describe('ItemTaskInitService – token refresh', () => {
         { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
         {
           provide: TaskTokenService,
-          useValue: { generate: () => generateFn(), generateForAnswer: () => EMPTY },
+          useValue: { generate: () => generateFn(), generateForAnswer: () => EMPTY, generateForObservedUser: () => EMPTY },
         },
       ],
     });
@@ -551,7 +556,7 @@ describe('ItemTaskInitService – teardown', () => {
         ItemTaskInitService,
         { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
         { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
-        { provide: TaskTokenService, useValue: { generate: () => EMPTY, generateForAnswer: () => EMPTY } },
+        { provide: TaskTokenService, useValue: emptyTokenService },
       ],
     });
 
@@ -630,6 +635,57 @@ describe('ItemTaskInitService – teardown', () => {
       expect(mockTask.destroy).toHaveBeenCalledTimes(1);
     } finally {
       jasmine.clock().uninstall();
+    }
+  });
+});
+
+describe('ItemTaskInitService – observed-user token', () => {
+  it('generates a read-only observed-user token when observedParticipantId is set', () => {
+    const generateForObservedUser = jasmine.createSpy('generateForObservedUser').and.returnValue(of('obs-token'));
+    const taskProxy$ = new Subject<Task>();
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskInitService,
+        { provide: LOAD_TASK_TIMEOUT, useValue: testTimeout },
+        { provide: TASK_PROXY_FROM_IFRAME, useFactory: () => () => taskProxy$.asObservable() },
+        {
+          provide: TaskTokenService,
+          useValue: {
+            generate: () => of('own-token'),
+            generateForAnswer: () => EMPTY,
+            generateForObservedUser,
+          },
+        },
+      ],
+    });
+    const service = TestBed.inject(ItemTaskInitService);
+    const iframe = document.createElement('iframe');
+    const task = jasmine.createSpyObj<Task>('Task', [
+      'getMetaData', 'load', 'updateToken', 'unload', 'destroy', 'bindPlatform',
+    ]);
+    task.getMetaData.and.returnValue(of({ usesTokens: true }));
+    task.load.and.returnValue(of(undefined));
+    task.updateToken.and.returnValue(of(undefined));
+    task.unload.and.returnValue(of(undefined));
+
+    jasmine.clock().install();
+    try {
+      service.configure(route, 'http://example.com/task', '0', null, undefined, true, '99');
+      service.initTask(iframe, () => undefined);
+      service.loadedTask$.subscribe();
+      service.taskToken$.subscribe();
+
+      iframe.dispatchEvent(new Event('load'));
+      jasmine.clock().tick(0);
+      taskProxy$.next(task);
+      taskProxy$.complete();
+      jasmine.clock().tick(0);
+
+      expect(generateForObservedUser).toHaveBeenCalledWith('1', '99', '0');
+      expect(task.updateToken).toHaveBeenCalledWith('obs-token');
+    } finally {
+      jasmine.clock().uninstall();
+      service.ngOnDestroy();
     }
   });
 });

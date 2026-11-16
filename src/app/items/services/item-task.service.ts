@@ -26,6 +26,8 @@ export interface TaskConfig {
   readOnly: boolean,
   initialAnswer: Answer | undefined /* not defined yet */ | null /* no initial answer */,
   locale?: string,
+  /** Load a read-only token for this participant's attempt (observer editor history). */
+  observedParticipantId?: string,
 }
 
 @Injectable()
@@ -90,6 +92,7 @@ export class ItemTaskService implements OnDestroy {
   );
 
   private readOnly = false;
+  private observedParticipantId: string | undefined;
   private attemptId$ = new ReplaySubject<string | undefined>(1);
 
   constructor() {
@@ -110,7 +113,6 @@ export class ItemTaskService implements OnDestroy {
       this.restoreRequest,
       this.initService.loadedTask$.pipe(catchError(() => EMPTY)),
       this.attemptId$,
-      () => this.readOnly,
       this.destroyRef,
     );
   }
@@ -124,8 +126,17 @@ export class ItemTaskService implements OnDestroy {
 
   configure(route: FullItemRoute, url: string, attemptId: string | undefined, options: TaskConfig): void {
     this.readOnly = options.readOnly;
+    this.observedParticipantId = options.observedParticipantId;
     this.attemptId$.next(attemptId);
-    this.initService.configure(route, url, attemptId, options.initialAnswer, options.locale, options.readOnly);
+    this.initService.configure(
+      route,
+      url,
+      attemptId,
+      options.initialAnswer,
+      options.locale,
+      options.readOnly,
+      options.observedParticipantId,
+    );
   }
 
   initTask(iframe: HTMLIFrameElement): void {
@@ -156,7 +167,12 @@ export class ItemTaskService implements OnDestroy {
         registry.clear();
         return;
       }
-      registry.set({ task, attemptId, savesEditorHistory });
+      registry.set({
+        task,
+        attemptId,
+        savesEditorHistory,
+        participantId: this.observedParticipantId,
+      });
     });
   }
 
