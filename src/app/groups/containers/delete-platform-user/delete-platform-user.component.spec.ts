@@ -51,7 +51,7 @@ describe('DeletePlatformUserComponent', () => {
   let dialogOpen: jasmine.Spy;
   let dialogClosed: Subject<boolean | undefined>;
 
-  async function setup(query: Record<string, string> = {}): Promise<void> {
+  async function setup(query: Record<string, string> = {}, withMineRoute = true): Promise<void> {
     dialogClosed = new Subject<boolean | undefined>();
     logout = jasmine.createSpy('logout');
     unexpectedError = jasmine.createSpy('unexpectedError');
@@ -63,9 +63,7 @@ describe('DeletePlatformUserComponent', () => {
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-        provideRouter([
-          { path: 'groups/mine', component: MinePageStub },
-        ]),
+        provideRouter(withMineRoute ? [ { path: 'groups/mine', component: MinePageStub } ] : []),
         { provide: APPCONFIG, useValue: { apiUrl } },
         {
           provide: ActivatedRoute,
@@ -188,6 +186,19 @@ describe('DeletePlatformUserComponent', () => {
 
     expect(TestBed.inject(Router).url).toBe('/groups/mine');
     expect(logout).toHaveBeenCalled();
+  });
+
+  it('still logs out when My groups cannot be opened', async () => {
+    await setup({}, false);
+    flushMemberships([ membership(false) ]);
+    deleteButton()?.click();
+    confirmDeletion();
+
+    http.expectOne({ method: 'DELETE', url: `${apiUrl}/current-user` }).flush({ success: true, message: 'deleted' });
+    await fixture.whenStable();
+
+    expect(logout).toHaveBeenCalled();
+    expect(unexpectedError).not.toHaveBeenCalled();
   });
 
   it('stays and shows the locked-membership reason when deletion is refused', async () => {

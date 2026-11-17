@@ -13,7 +13,10 @@ import { ActionFeedbackService } from 'src/app/services/action-feedback.service'
 import { UserSessionService } from 'src/app/services/user-session.service';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { errorState, fetchingState, readyState } from 'src/app/utils/state';
-import { DeletePlatformUserDialogComponent } from './delete-platform-user-dialog.component';
+import {
+  DeletePlatformUserDialogComponent,
+  DeletePlatformUserDialogData,
+} from './delete-platform-user-dialog.component';
 
 type LoginCheck =
   | { kind: 'absent' }
@@ -81,7 +84,7 @@ export class DeletePlatformUserComponent {
     const login = this.profile()?.login;
     if (login === undefined) return;
 
-    this.dialog.open<boolean, { login: string }>(DeletePlatformUserDialogComponent, {
+    this.dialog.open<boolean, DeletePlatformUserDialogData>(DeletePlatformUserDialogComponent, {
       data: { login },
     }).closed.pipe(
       filter(confirmed => confirmed === true),
@@ -94,8 +97,7 @@ export class DeletePlatformUserComponent {
   }
 
   private canOpenDialog(): boolean {
-    const kind = this.loginCheck().kind;
-    if (kind !== 'absent' && kind !== 'matched') return false;
+    if (!this.showButton()) return false;
     if (this.memberships().isFetching) return false;
     if (this.showLockedReason()) return false;
     return true;
@@ -114,9 +116,10 @@ export class DeletePlatformUserComponent {
   }
 
   private leaveAfterDeletion(): void {
-    void this.router.navigateByUrl('/groups/mine').then(succeeded => {
-      if (succeeded) this.userSession.logout();
-    });
+    // Logout even if My groups cannot be opened: the platform user is already gone.
+    void this.router.navigateByUrl('/groups/mine')
+      .catch(() => false)
+      .then(() => this.userSession.logout());
   }
 
   private onDeleteFailed(err: unknown): void {

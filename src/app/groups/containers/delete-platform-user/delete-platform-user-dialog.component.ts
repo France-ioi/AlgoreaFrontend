@@ -34,8 +34,8 @@ export class DeletePlatformUserDialogComponent {
     login: this.loginControl,
   });
 
-  private readonly typed = toSignal(this.loginControl.valueChanges, { initialValue: '' });
-  readonly canConfirm = computed(() => this.typed().trim() === this.login);
+  private readonly typedLogin = toSignal(this.loginControl.valueChanges, { initialValue: '' });
+  readonly canConfirm = computed(() => this.typedLogin().trim() === this.login);
 
   cancel(): void {
     this.dialogRef.close(false);
