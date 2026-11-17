@@ -6,6 +6,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { LanguagePickerComponent } from 'src/app/containers/language-picker/language-picker.component';
 import { AsyncPipe } from '@angular/common';
+import { DeletePlatformUserComponent } from '../delete-platform-user/delete-platform-user.component';
 
 @Component({
   selector: 'alg-platform-settings',
@@ -14,6 +15,7 @@ import { AsyncPipe } from '@angular/common';
   imports: [
     LanguagePickerComponent,
     AsyncPipe,
+    DeletePlatformUserComponent,
   ]
 })
 export class PlatformSettingsComponent {

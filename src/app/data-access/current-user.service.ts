@@ -54,4 +54,10 @@ export class CurrentUserHttpService {
       );
   }
 
+  delete(): Observable<void> {
+    return this.http.delete<SimpleActionResponse>(`${this.config.apiUrl}/current-user`).pipe(
+      map(assertSuccess),
+    );
+  }
+
 }

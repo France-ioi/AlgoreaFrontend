@@ -1,0 +1,17 @@
+@if (showMismatch()) {
+  <p i18n>
+    This page was opened for another login. Sign in with that login to delete its data on this platform.
+  </p>
+}
+@if (showLockedReason()) {
+  <p i18n>
+    You are a member of groups you are not allowed to leave.
+    A manager of those groups has to let you leave. Then come back to this page.
+    See <a class="alg-link" routerLink="/groups/mine">My groups</a>.
+  </p>
+}
+@if (showButton()) {
+  <button type="button" class="size-l danger" alg-button (click)="onDelete()" i18n>
+    Delete the user and its data on this platform.
+  </button>
+}

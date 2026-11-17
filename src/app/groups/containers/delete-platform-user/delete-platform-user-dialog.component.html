@@ -1,0 +1,16 @@
+<alg-modal [modalTitle]="title" (closeEvent)="cancel()">
+  <p i18n>Your data on this platform will be deleted and cannot be restored. Your login stays.</p>
+  <p i18n>Type {{ login }} to confirm.</p>
+  <alg-input [parentForm]="form" name="login" [ariaLabel]="loginLabel" />
+  <footer>
+    <button type="button" class="stroke" alg-button (click)="cancel()" i18n>No</button>
+    <button
+      type="button"
+      class="danger"
+      alg-button
+      [disabled]="!canConfirm()"
+      (click)="confirm()"
+      i18n
+    >Delete it</button>
+  </footer>
+</alg-modal>
