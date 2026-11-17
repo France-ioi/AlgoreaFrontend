@@ -7,6 +7,7 @@ import { ManageGroupsComponent } from 'src/app/groups/containers/manage-groups/m
 import { PageNotFoundComponent } from '../containers/page-not-found/page-not-found.component';
 import { ContentDisplayType, DefaultLayoutInitService } from '../services/layout.service';
 import { groupPathRouterSubPrefix, managedGroupsPage, myGroupsPage, userPathRouterSubPrefix } from '../models/routing/group-route';
+import { currentUserPathGuard } from './current-user-path.guard';
 
 const routes: Routes = [
   {
@@ -20,6 +21,22 @@ const routes: Routes = [
     component: ManageGroupsComponent,
     canActivate: [ DefaultLayoutInitService ],
     data: { contentDisplayType: ContentDisplayType.Show },
+  },
+  {
+    // Fixed URL for the login-module. `me` is not a group id; the guard redirects before the page renders.
+    path: userPathRouterSubPrefix + '/me',
+    component: UserComponent,
+    canActivate: [ currentUserPathGuard ],
+    children: [ /* if you change routes here, update `users/:id` and `isUserPage` as well! */
+      {
+        path: 'personal-data',
+        children: [],
+      },
+      {
+        path: 'settings',
+        children: [],
+      }
+    ]
   },
   {
     path: userPathRouterSubPrefix + '/:id',

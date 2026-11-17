@@ -59,7 +59,7 @@ Parameters editor, children layout, and strings save: [item-parameters-form.md](
 
 ### Groups
 
-Organizational units: **Users**, **Teams**, **Classes**. Routes: `/groups/by-id/:id`, `/groups/users/:id`.
+Organizational units: **Users**, **Teams**, **Classes**. Routes: `/groups/by-id/:id`, `/groups/users/:id`. `/groups/users/me` is a fixed login-module URL that redirects to the signed-in user's id ([ADR](../adr/0001-current-user-path.md)).
 
 ## State Management
 

@@ -36,6 +36,22 @@ _Avoid_: account, profile (unless meaning Profile below)
 The login-module profile payload nested under the current-user (and user-view) `profile` field. It is not the flat root attributes of those responses.
 _Avoid_: user info, personal info, account details
 
+**Login**:
+The name of a user on the login-module.
+_Avoid_: username, account
+
+**Login id**:
+The login-module's identifier for a user. It is not the user's group id on this platform.
+_Avoid_: user id
+
+**Locked membership**:
+A membership the user cannot leave until a date, because they approved the group's lock and that date has not passed.
+_Avoid_: frozen membership
+
+**Frozen membership**:
+A group flag that stops a team member from leaving. It does not by itself stop the user from deleting their data on this platform.
+_Avoid_: locked membership
+
 **Activity log**:
 The platform record of what a participant did on an item: submissions, saved answers, current answers, and when the activity was started or validated. The History page calls these events.
 _Avoid_: editor history, edits
