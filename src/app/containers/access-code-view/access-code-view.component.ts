@@ -41,7 +41,8 @@ export class AccessCodeViewComponent {
         throwError(() => new Error($localize`Failed to check code validity, please retry. If the problem persists, contact us.`))
       ),
       switchMap(({ valid, group, reason }) => {
-        if (!valid) throw new Error(
+        // already_member is a correct code (valid true). The reason means do not try to join.
+        if (reason === 'already_member' || !valid) throw new Error(
           reason ? this.invalidCodeReasonToString(reason): $localize`The provided code is invalid`
         );
 
