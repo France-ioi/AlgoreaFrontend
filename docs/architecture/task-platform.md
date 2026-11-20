@@ -26,7 +26,7 @@ Whether a task exposes its `solution` view is decided by the task itself, from t
 
 ## Leaving a task (unload then destroy)
 
-When the user leaves a loaded task (another item, leaving the items area, or retry remount), the platform calls Bebras `task.unload` on the live JSChannel and **then** `destroy()` (channel teardown). In-app leaves **await** unload (task-proxy timeout 2000ms; errors/timeouts still proceed to destroy). Tab close/refresh is best-effort only (fire-and-forget, same as save-on-close). Item→item navigation keeps a sticky last-ready `ItemData` so the iframe stays mounted until awaited teardown finishes.
+When the user leaves a loaded task (another item, leaving the items area, or retry remount), the platform calls Bebras `task.unload` on the live JSChannel and **then** `destroy()` (channel teardown). In-app leaves **await** unload (task-proxy timeout 2000ms; errors/timeouts still proceed to destroy). On tab close/refresh, `task.unload` is posted synchronously next to the save's `getAnswer`/`getState` (same turn); delivery is still best-effort, and save-on-close remains best-effort. Item→item navigation keeps a sticky last-ready `ItemData` so the iframe stays mounted until awaited teardown finishes.
 
 ## Test task for platform-task integration
 

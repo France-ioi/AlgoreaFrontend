@@ -4,7 +4,6 @@ import { createSelector, Store } from '@ngrx/store';
 import { combineLatest, EMPTY, fromEvent, merge, Observable, of, Subject } from 'rxjs';
 import {
   catchError,
-  defaultIfEmpty,
   distinctUntilChanged,
   exhaustMap,
   filter,
@@ -145,14 +144,11 @@ export class ItemTaskFlowService implements OnDestroy {
 
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(
-        // Best-effort only: the browser will not wait. Sequence save → teardown (same order as
-        // beforeUnload()) so destroy() cannot abort the save's getAnswer/getState round-trip.
-        switchMap(() => this.saveHandler().pipe(
-          catchError(() => EMPTY),
-          filter(state => !state.isFetching),
-          take(1),
-          defaultIfEmpty(undefined),
-          switchMap(() => this.teardownHandler().pipe(catchError(() => EMPTY))),
+        // The browser will not wait for async work: post every message synchronously. The task handles messages
+        // in order, so getAnswer/getState (from save) are answered before unload; destroy() waits for the unload reply.
+        switchMap(() => merge(
+          this.saveHandler().pipe(catchError(() => EMPTY)),
+          this.teardownHandler().pipe(catchError(() => EMPTY)),
         )),
         takeUntilDestroyed(),
       )

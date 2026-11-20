@@ -183,6 +183,8 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
 
   afterEach(() => {
     service.ngOnDestroy();
+    // Destroy the injector so takeUntilDestroyed() drops the window beforeunload listener.
+    TestBed.resetTestingModule();
   });
 
   it('does not cancel an in-flight before-unload save when a second trigger fires', () => {
@@ -232,6 +234,85 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
     } finally {
       jasmine.clock().uninstall();
     }
+  });
+
+  it('starts save and teardown in the same turn on window beforeunload', () => {
+    // Karma treats a real window beforeunload as a full page reload, so capture the listener
+    // fromEvent registers and invoke it with a synthetic Event (same path as dispatch).
+    TestBed.resetTestingModule();
+    const beforeUnloadListeners = new Set<EventListener>();
+    const realAdd = globalThis.addEventListener.bind(globalThis);
+    const realRemove = globalThis.removeEventListener.bind(globalThis);
+    spyOn(globalThis, 'addEventListener').and.callFake(
+      (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
+        if (type === 'beforeunload') {
+          beforeUnloadListeners.add(typeof listener === 'function' ? listener : listener.handleEvent.bind(listener));
+          return;
+        }
+        realAdd(type, listener as EventListener, options as AddEventListenerOptions);
+      },
+    );
+    spyOn(globalThis, 'removeEventListener').and.callFake(
+      (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) => {
+        if (type === 'beforeunload') {
+          beforeUnloadListeners.delete(typeof listener === 'function' ? listener : listener.handleEvent.bind(listener));
+          return;
+        }
+        realRemove(type, listener as EventListener, options as EventListenerOptions);
+      },
+    );
+
+    TestBed.configureTestingModule({
+      providers: [
+        ItemTaskFlowService,
+        provideMockStore({
+          selectors: [
+            { selector: fromItemContent.selectActiveContentRoute, value: route },
+            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
+            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData) },
+          ],
+        }),
+        { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
+        { provide: ConfirmationModalService, useValue: { open: (): ReturnType<ConfirmationModalService['open']> => of(false) } },
+        { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
+        {
+          provide: InitialAnswerDataSource,
+          useValue: {
+            answer$: of(null),
+            error$: of(undefined),
+            setInfo: jasmine.createSpy('setInfo'),
+          },
+        },
+        { provide: APPCONFIG, useValue: { redirects: [] } },
+      ],
+    });
+    service = TestBed.inject(ItemTaskFlowService);
+    saveStarted = 0;
+    teardownStarted = 0;
+    callOrder.length = 0;
+    service.registerSaveHandler(() => {
+      saveStarted += 1;
+      callOrder.push('save');
+      return concat(
+        of(fetchingState<void>(undefined)),
+        timer(5000).pipe(map(() => readyState(undefined))),
+      );
+    });
+    service.registerTeardownHandler(() => {
+      teardownStarted += 1;
+      callOrder.push('teardown');
+      return of(undefined);
+    });
+
+    // Save is still fetching (timer 5000); do not tick the clock — teardown must start in the same turn.
+    expect(beforeUnloadListeners.size).toBe(1);
+    beforeUnloadListeners.forEach(listener => {
+      listener(new Event('beforeunload'));
+    });
+
+    expect(callOrder).toEqual([ 'save', 'teardown' ]);
+    expect(saveStarted).toBe(1);
+    expect(teardownStarted).toBe(1);
   });
 });
 

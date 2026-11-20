@@ -299,7 +299,8 @@ export class TestTaskPage {
 
   /**
    * After iframe teardown: mock mirrors calls to parent `testTaskCallsHost` and sessionStorage.
-   * Prefer in-app leave (canDeactivate awaits unload); full page.goto beforeunload is best-effort only.
+   * Prefer in-app leave (canDeactivate awaits unload). On tab close/reload, task.unload is posted
+   * synchronously next to save (sessionStorage survives reload); delivery remains best-effort.
    */
   async waitForHostCall(method: string): Promise<TaskCallLogEntry> {
     const readHost = (): Promise<TaskCallLogEntry[]> => this.page.evaluate(() => {
