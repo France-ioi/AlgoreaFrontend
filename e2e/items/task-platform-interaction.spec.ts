@@ -277,6 +277,15 @@ test.describe('platform-task interaction', () => {
 
     await page.reload();
     await testTaskPage.waitForHostCall('task.unload');
+
+    // The save's getAnswer/getState are posted in the same turn just before unload, so they are the last
+    // task calls received before it (earlier autosave calls may precede them).
+    const hostCalls = await testTaskPage.getHostCalls();
+    const unloadIndex = hostCalls.findIndex(entry => entry.method === 'task.unload');
+    const taskCallsBeforeUnload = hostCalls.slice(0, unloadIndex)
+      .map(entry => entry.method)
+      .filter(method => method.startsWith('task.'));
+    expect(taskCallsBeforeUnload.slice(-2)).toEqual([ 'task.getAnswer', 'task.getState' ]);
   });
 
   test.describe('History Events & Edits', () => {

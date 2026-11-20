@@ -303,7 +303,15 @@ export class TestTaskPage {
    * synchronously next to save (sessionStorage survives reload); delivery remains best-effort.
    */
   async waitForHostCall(method: string): Promise<TaskCallLogEntry> {
-    const readHost = (): Promise<TaskCallLogEntry[]> => this.page.evaluate(() => {
+    await expect.poll(async () => (await this.getHostCalls()).some(entry => entry.method === method), {
+      timeout: 15000,
+    }).toBe(true);
+    return (await this.getHostCalls()).find(entry => entry.method === method)!;
+  }
+
+  /** Durable host-side call log, in the order the task received the calls (sessionStorage first, then parent mirror). */
+  getHostCalls(): Promise<TaskCallLogEntry[]> {
+    return this.page.evaluate(() => {
       const fromWindow = (window as unknown as { testTaskCallsHost?: TaskCallLogEntry[] }).testTaskCallsHost ?? [];
       let fromStorage: TaskCallLogEntry[] = [];
       try {
@@ -321,10 +329,6 @@ export class TestTaskPage {
       }
       return merged;
     });
-    await expect.poll(async () => (await readHost()).some(entry => entry.method === method), {
-      timeout: 15000,
-    }).toBe(true);
-    return (await readHost()).find(entry => entry.method === method)!;
   }
 
   async waitForPlatformCall(method: string): Promise<TaskCallLogEntry> {

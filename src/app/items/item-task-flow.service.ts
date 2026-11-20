@@ -144,8 +144,8 @@ export class ItemTaskFlowService implements OnDestroy {
 
     fromEvent<BeforeUnloadEvent>(globalThis, 'beforeunload', { capture: true })
       .pipe(
-        // The browser will not wait for async work: post every message synchronously. The task handles messages
-        // in order, so getAnswer/getState (from save) are answered before unload; destroy() waits for the unload reply.
+        // The browser will not wait for async work: post every message synchronously, so getAnswer/getState (from save)
+        // reach the task before unload; destroy() waits for the unload reply (replies the task defers past unload are dropped).
         switchMap(() => merge(
           this.saveHandler().pipe(catchError(() => EMPTY)),
           this.teardownHandler().pipe(catchError(() => EMPTY)),

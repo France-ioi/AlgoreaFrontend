@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { concat, EMPTY, of, Subject, timer } from 'rxjs';
+import { concat, EMPTY, Observable, of, Subject, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { APPCONFIG } from 'src/app/config';
@@ -60,6 +60,33 @@ function createItemData(route: FullItemRoute): ItemData {
   };
 }
 
+function configureFlowService(
+  route: FullItemRoute,
+  initialAnswer: { answer$: Observable<unknown>, error$: Observable<unknown>, setInfo: jasmine.Spy } = {
+    answer$: of(null),
+    error$: of(undefined),
+    setInfo: jasmine.createSpy('setInfo'),
+  },
+): void {
+  TestBed.configureTestingModule({
+    providers: [
+      ItemTaskFlowService,
+      provideMockStore({
+        selectors: [
+          { selector: fromItemContent.selectActiveContentRoute, value: route },
+          { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
+          { selector: fromItemContent.selectActiveContentData, value: readyState(createItemData(route)) },
+        ],
+      }),
+      { provide: InitialAnswerDataSource, useValue: initialAnswer },
+      { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
+      { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
+      { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
+      { provide: APPCONFIG, useValue: { redirects: [] } },
+    ],
+  });
+}
+
 describe('ItemTaskFlowService', () => {
   let store: MockStore;
   let setInfo: jasmine.Spy;
@@ -69,28 +96,7 @@ describe('ItemTaskFlowService', () => {
 
   beforeEach(() => {
     setInfo = jasmine.createSpy('setInfo');
-
-    TestBed.configureTestingModule({
-      providers: [
-        ItemTaskFlowService,
-        provideMockStore({
-          selectors: [
-            { selector: fromItemContent.selectActiveContentRoute, value: route1 },
-            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
-            { selector: fromItemContent.selectActiveContentData, value: readyState(createItemData(route1)) },
-          ],
-        }),
-        {
-          provide: InitialAnswerDataSource,
-          useValue: { setInfo, error$: EMPTY, answer$: EMPTY },
-        },
-        { provide: LocaleService, useValue: { currentLang: { tag: 'en' } } },
-        { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
-        { provide: ItemRouter, useValue: jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]) },
-        { provide: APPCONFIG, useValue: { redirects: {} } },
-      ],
-    });
-
+    configureFlowService(route1, { setInfo, error$: EMPTY, answer$: EMPTY });
     store = TestBed.inject(MockStore);
     TestBed.inject(ItemTaskFlowService);
   });
@@ -133,38 +139,9 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
   const callOrder: string[] = [];
 
   const route = itemRoute('activity', '1', { attemptId: '0', path: [] });
-  const itemData = createItemData(route);
 
-  beforeEach(() => {
-    saveStarted = 0;
-    teardownStarted = 0;
-    callOrder.length = 0;
-
-    TestBed.configureTestingModule({
-      providers: [
-        ItemTaskFlowService,
-        provideMockStore({
-          selectors: [
-            { selector: fromItemContent.selectActiveContentRoute, value: route },
-            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
-            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData) },
-          ],
-        }),
-        { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
-        { provide: ConfirmationModalService, useValue: { open: (): ReturnType<ConfirmationModalService['open']> => of(false) } },
-        { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
-        {
-          provide: InitialAnswerDataSource,
-          useValue: {
-            answer$: of(null),
-            error$: of(undefined),
-            setInfo: jasmine.createSpy('setInfo'),
-          },
-        },
-        { provide: APPCONFIG, useValue: { redirects: [] } },
-      ],
-    });
-
+  // Injected per test (not in beforeEach) so a test can spy on window listeners before the constructor runs.
+  function createService(): void {
     service = TestBed.inject(ItemTaskFlowService);
     service.registerSaveHandler(() => {
       saveStarted += 1;
@@ -179,6 +156,13 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
       callOrder.push('teardown');
       return of(undefined);
     });
+  }
+
+  beforeEach(() => {
+    saveStarted = 0;
+    teardownStarted = 0;
+    callOrder.length = 0;
+    configureFlowService(route);
   });
 
   afterEach(() => {
@@ -188,6 +172,7 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
   });
 
   it('does not cancel an in-flight before-unload save when a second trigger fires', () => {
+    createService();
     jasmine.clock().install();
     try {
       let beforeUnloadDone: boolean | undefined;
@@ -215,6 +200,7 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
   });
 
   it('runs teardown after skipBeforeUnload', () => {
+    createService();
     jasmine.clock().install();
     try {
       let beforeUnloadDone: boolean | undefined;
@@ -239,76 +225,33 @@ describe('ItemTaskFlowService – before-unload save then teardown', () => {
   it('starts save and teardown in the same turn on window beforeunload', () => {
     // Karma treats a real window beforeunload as a full page reload, so capture the listener
     // fromEvent registers and invoke it with a synthetic Event (same path as dispatch).
-    TestBed.resetTestingModule();
-    const beforeUnloadListeners = new Set<EventListener>();
+    const beforeUnloadListeners = new Set<EventListenerOrEventListenerObject>();
     const realAdd = globalThis.addEventListener.bind(globalThis);
     const realRemove = globalThis.removeEventListener.bind(globalThis);
     spyOn(globalThis, 'addEventListener').and.callFake(
       (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
         if (type === 'beforeunload') {
-          beforeUnloadListeners.add(typeof listener === 'function' ? listener : listener.handleEvent.bind(listener));
+          beforeUnloadListeners.add(listener);
           return;
         }
-        realAdd(type, listener as EventListener, options as AddEventListenerOptions);
+        realAdd(type, listener, options);
       },
     );
     spyOn(globalThis, 'removeEventListener').and.callFake(
       (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions) => {
         if (type === 'beforeunload') {
-          beforeUnloadListeners.delete(typeof listener === 'function' ? listener : listener.handleEvent.bind(listener));
+          beforeUnloadListeners.delete(listener);
           return;
         }
-        realRemove(type, listener as EventListener, options as EventListenerOptions);
+        realRemove(type, listener, options);
       },
     );
-
-    TestBed.configureTestingModule({
-      providers: [
-        ItemTaskFlowService,
-        provideMockStore({
-          selectors: [
-            { selector: fromItemContent.selectActiveContentRoute, value: route },
-            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
-            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData) },
-          ],
-        }),
-        { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
-        { provide: ConfirmationModalService, useValue: { open: (): ReturnType<ConfirmationModalService['open']> => of(false) } },
-        { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
-        {
-          provide: InitialAnswerDataSource,
-          useValue: {
-            answer$: of(null),
-            error$: of(undefined),
-            setInfo: jasmine.createSpy('setInfo'),
-          },
-        },
-        { provide: APPCONFIG, useValue: { redirects: [] } },
-      ],
-    });
-    service = TestBed.inject(ItemTaskFlowService);
-    saveStarted = 0;
-    teardownStarted = 0;
-    callOrder.length = 0;
-    service.registerSaveHandler(() => {
-      saveStarted += 1;
-      callOrder.push('save');
-      return concat(
-        of(fetchingState<void>(undefined)),
-        timer(5000).pipe(map(() => readyState(undefined))),
-      );
-    });
-    service.registerTeardownHandler(() => {
-      teardownStarted += 1;
-      callOrder.push('teardown');
-      return of(undefined);
-    });
+    createService();
 
     // Save is still fetching (timer 5000); do not tick the clock — teardown must start in the same turn.
     expect(beforeUnloadListeners.size).toBe(1);
-    beforeUnloadListeners.forEach(listener => {
-      listener(new Event('beforeunload'));
-    });
+    const event = new Event('beforeunload');
+    beforeUnloadListeners.forEach(listener => (typeof listener === 'function' ? listener(event) : listener.handleEvent(event)));
 
     expect(callOrder).toEqual([ 'save', 'teardown' ]);
     expect(saveStarted).toBe(1);
@@ -324,38 +267,12 @@ describe('ItemTaskFlowService – sticky item→item teardown', () => {
 
   const route1 = itemRoute('activity', '1', { attemptId: '0', path: [] });
   const route2 = itemRoute('activity', '2', { attemptId: '0', path: [] });
-  const itemData1 = createItemData(route1);
   const itemData2 = createItemData(route2);
 
   beforeEach(() => {
     teardownCalls = 0;
     teardownRelease$ = new Subject<void>();
-
-    TestBed.configureTestingModule({
-      providers: [
-        ItemTaskFlowService,
-        provideMockStore({
-          selectors: [
-            { selector: fromItemContent.selectActiveContentRoute, value: route1 },
-            { selector: fromItemContent.selectActiveContentRouteErrorHandlingState, value: null },
-            { selector: fromItemContent.selectActiveContentData, value: readyState(itemData1) },
-          ],
-        }),
-        { provide: LocaleService, useValue: { currentLang: { tag: 'en', path: '/en' } } },
-        { provide: ConfirmationModalService, useValue: { open: (): typeof EMPTY => EMPTY } },
-        { provide: ItemRouter, useValue: { navigateTo: jasmine.createSpy('navigateTo') } },
-        {
-          provide: InitialAnswerDataSource,
-          useValue: {
-            answer$: of(null),
-            error$: of(undefined),
-            setInfo: jasmine.createSpy('setInfo'),
-          },
-        },
-        { provide: APPCONFIG, useValue: { redirects: [] } },
-      ],
-    });
-
+    configureFlowService(route1);
     store = TestBed.inject(MockStore);
     service = TestBed.inject(ItemTaskFlowService);
     service.registerTeardownHandler(() => {
