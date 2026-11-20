@@ -261,10 +261,31 @@ test.describe('platform-task interaction', () => {
     await testTaskPage.clearHostCalls();
 
     // In-app leave runs BeforeUnloadGuard → save then awaited teardown while the iframe is mounted.
-    // Full page.goto only gets best-effort window beforeunload and does not reliably deliver unload.
+    // Tab close/reload posts task.unload synchronously next to save (best-effort; see reload test).
     await page.locator('alg-left-tab-bar').getByRole('tab', { name: 'Groups' }).click();
     await expect(page).toHaveURL(/\/groups/, { timeout: 15000 });
     await testTaskPage.waitForHostCall('task.unload');
+  });
+
+  test('calls task.unload when the page is reloaded', async ({ page, browserName }) => {
+    // Best-effort beforeunload: Chromium delivers task.unload into sessionStorage; Firefox does not reliably.
+    test.skip(browserName === 'firefox', 'Firefox does not reliably deliver best-effort beforeunload unload');
+
+    await testTaskPage.gotoItem();
+    await testTaskPage.waitForLoaded();
+    await testTaskPage.clearHostCalls();
+
+    await page.reload();
+    await testTaskPage.waitForHostCall('task.unload');
+
+    // The save's getAnswer/getState are posted in the same turn just before unload, so they are the last
+    // task calls received before it (earlier autosave calls may precede them).
+    const hostCalls = await testTaskPage.getHostCalls();
+    const unloadIndex = hostCalls.findIndex(entry => entry.method === 'task.unload');
+    const taskCallsBeforeUnload = hostCalls.slice(0, unloadIndex)
+      .map(entry => entry.method)
+      .filter(method => method.startsWith('task.'));
+    expect(taskCallsBeforeUnload.slice(-2)).toEqual([ 'task.getAnswer', 'task.getState' ]);
   });
 
   test.describe('History Events & Edits', () => {
