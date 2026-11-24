@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.97.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.2...v2.97.0) - 2026-11-24
+
+- tasks using the new Bebras API v3 now keep their own work in progress instead of the platform's current-answer autosave
+- history: new "Events & Edits" view showing a task's editor checkpoints merged with the activity log, with "Load more" paging across both
+- history: show the edits made between checkpoints, and restore the task to a previous checkpoint
+- history: observers can open the observed user's editor history read-only
+- settings: users can delete their own platform data (blocked, with an explanation and a link to My groups, if they hold a locked group membership)
+- joining a group: a valid code for a group the user already belongs to now shows "You are already a member" instead of opening the join dialog (requires a backend that returns `reason: already_member`)
+- fix the "Changes successfully saved" message disappearing after saving item parameters when the page refreshes
+- fix tasks sometimes not being told to unload when the tab is closed or refreshed
+- allow tasks to use the Web Share API
+
 ## [v2.96.2](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.1...v2.96.2) - 2026-11-06
 
 - fix device-connected tasks (Bluetooth / WebSocket) failing to load when an analytics tracker script such as Matomo is added to the page head
