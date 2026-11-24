@@ -85,6 +85,6 @@ Internationalize all English UI strings with Angular i18n markers. Crowdin owns 
 
 # Agent skills
 
-- **Issue tracker:** markdown under `.scratch/<feature>/` — [docs/agents/issue-tracker.md](docs/agents/issue-tracker.md)
+- **Issue tracker:** GitHub Issues on `France-ioi/AlgoreaFrontend` via `gh` — [docs/agents/issue-tracker.md](docs/agents/issue-tracker.md)
 - **Triage labels:** `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix` — [docs/agents/triage-labels.md](docs/agents/triage-labels.md)
 - **Domain docs:** root `GLOSSARY.md` + `docs/adr/` (+ Algorea knowledge base) — [docs/agents/domain.md](docs/agents/domain.md)
