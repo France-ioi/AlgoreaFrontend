@@ -16,6 +16,10 @@ Browsers increasingly block iframes from using Web Bluetooth or opening WebSocke
 
 **Constraint:** at most one task iframe may use the device proxy at a time. The module holds singleton connection state and a single `window.task` bridge; the app currently mounts one `alg-item-display` per item view. Two simultaneous task iframes (e.g. split comparison) are unsupported.
 
+## Permissions Policy for the task iframe
+
+The task iframe in `item-display.component.html` delegates `fullscreen` (`allowfullscreen`), `bluetooth` and `web-share` (`allow="bluetooth; web-share"`). No explicit origin is given, so each applies to the iframe `src` origin only and not to iframes nested in the task. Tasks call `navigator.share()` directly (no jschannel proxy). Description iframes stay fullscreen-only. Add new features here deliberately, one at a time.
+
 ## Showing the solution tab right after validation
 
 Whether a task exposes its `solution` view is decided by the task itself, from the `bAccessSolutions` claim in its signed task token (the backend grants it once the user has validated the item). The platform no longer gates the solution tab in [item-tabs.ts](../../src/app/items/item-tabs.ts) — the task is the source of truth. To make the tab appear immediately after a validating submission without a full reload:
