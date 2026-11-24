@@ -18,7 +18,7 @@ Browsers increasingly block iframes from using Web Bluetooth or opening WebSocke
 
 ## Permissions Policy for the task iframe
 
-The task iframe in `item-display.component.html` delegates `fullscreen` (`allowfullscreen`), `bluetooth` and `web-share` (`allow="bluetooth; web-share"`). No explicit origin is given, so each applies to the iframe `src` origin only and not to iframes nested in the task. Tasks call `navigator.share()` directly (no jschannel proxy). Description iframes stay fullscreen-only. Add new features here deliberately, one at a time.
+The task iframe in `item-display.component.html` delegates `fullscreen` (`allowfullscreen`), `bluetooth` and `web-share` (`allow="bluetooth; web-share"`). `bluetooth` and `web-share` use the default allowlist (the iframe `src` origin), so iframes nested in the task do not inherit them; `allowfullscreen` is equivalent to `fullscreen *`. Tasks call `navigator.share()` directly (no jschannel proxy). Description iframes stay fullscreen-only. Add new features here deliberately, one at a time.
 
 ## Showing the solution tab right after validation
 
