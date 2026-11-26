@@ -18,7 +18,7 @@ import { AsyncPipe, DatePipe } from '@angular/common';
 import { UserSessionService } from '../../../services/user-session.service';
 import { ShowOverlayHoverTargetDirective } from 'src/app/ui-components/overlay/show-overlay-hover-target.directive';
 import { ShowOverlayDirective } from 'src/app/ui-components/overlay/show-overlay.directive';
-import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
+import { activityRowMark } from 'src/app/pipes/activityRowMark';
 import { IsHttpForbiddenPipe } from 'src/app/utils/error-handling/http-error.pipes';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { Store } from '@ngrx/store';
@@ -60,7 +60,6 @@ const logsLimit = 20;
     LogActionDisplayPipe,
     ShowOverlayHoverTargetDirective,
     ShowOverlayDirective,
-    LogActivityTypeIconPipe,
     ButtonComponent,
     CdkTable,
     CdkColumnDef,
@@ -104,6 +103,7 @@ export class GroupLogViewComponent {
   });
 
   readonly state$ = this.datapager.list$;
+  readonly activityRowMark = activityRowMark;
 
   private groupIdAtInit: string | undefined | null = null;
 

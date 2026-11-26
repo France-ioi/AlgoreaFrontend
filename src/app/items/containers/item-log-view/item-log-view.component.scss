@@ -58,6 +58,36 @@
   margin-top: functions.toRem(5);
 }
 
+.history-edits-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: functions.toRem(4);
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: var(--alg-primary-color, #0F61FF);
+  white-space: nowrap;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .history-row-actions .alg-link {
   padding: 0;
   border: 0;

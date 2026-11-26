@@ -63,6 +63,32 @@
     <div class="alg-table-page-wrapper">
       <div class="alg-table-horizontal-scroll">
         <table class="alg-table-v2" cdk-table [dataSource]="displayedRows()">
+          <ng-container cdkColumnDef="edits">
+            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>
+              <span class="visually-hidden" i18n>Edits</span>
+            </th>
+            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+              @if (
+                rowData.kind === 'checkpoint'
+                && (rowData.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0) > 0
+              ) {
+                <button
+                  type="button"
+                  class="history-edits-toggle"
+                  [attr.aria-expanded]="expansion.isExpanded(rowData.checkpoint.id)"
+                  [disabled]="expansion.loadingCheckpointId() === rowData.checkpoint.id"
+                  (click)="toggleCheckpoint(rowData)"
+                >
+                  <i
+                    class="ph"
+                    [class.ph-caret-down]="expansion.isExpanded(rowData.checkpoint.id)"
+                    [class.ph-caret-right]="!expansion.isExpanded(rowData.checkpoint.id)"
+                  ></i>
+                  {{ expansion.toggleLabel(rowData) }}
+                </button>
+              }
+            </td>
+          </ng-container>
           @for (column of columns(); track column.field) {
             <ng-container [cdkColumnDef]="column.field">
               <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>{{ column.header }}</th>
@@ -72,7 +98,7 @@
                     @if (rowData.kind === 'checkpoint') {
                       <div class="item-title-section">
                         <div class="item-title-section-left">
-                          <i class="item-icon ph-duotone ph-flag"></i>
+                          <i class="item-icon ph-duotone ph-floppy-disk"></i>
                         </div>
                         <div class="item-title">
                           <p class="item-title-caption">{{ checkpointCaption(rowData) }}</p>
@@ -80,24 +106,13 @@
                             <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
                               Restore
                             </button>
-                            @if ((rowData.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0) > 0) {
-                              <button
-                                type="button"
-                                class="alg-link"
-                                [attr.aria-expanded]="expansion.isExpanded(rowData.checkpoint.id)"
-                                [disabled]="expansion.loadingCheckpointId() === rowData.checkpoint.id"
-                                (click)="toggleCheckpoint(rowData)"
-                              >
-                                {{ expansion.toggleLabel(rowData) }}
-                              </button>
-                            }
                           </div>
                         </div>
                       </div>
                     } @else if (rowData.kind === 'edit') {
                       <div class="item-title-section">
                         <div class="item-title-section-left">
-                          <i class="item-icon ph ph-circle"></i>
+                          <i class="item-icon ph ph-floppy-disk"></i>
                         </div>
                         <div class="item-title">
                           <p class="item-title-caption">{{ editCaption(rowData.edit) }}</p>
@@ -111,11 +126,11 @@
                     } @else {
                       <div class="item-title-section">
                         <div class="item-title-section-left">
-                          @if (rowData.event.score) {
-                            <alg-score-ring [currentScore]="rowData.event.score"
-                             />
-                          } @else {
-                            <i class="item-icon {{ rowData.event.activityType | logActivityTypeIcon }}"></i>
+                          @let mark = activityRowMark(rowData.event.activityType, rowData.event.score);
+                          @if (mark.kind === 'score') {
+                            <alg-score-ring [currentScore]="rowData.event.score ?? 0" />
+                          } @else if (mark.iconClass) {
+                            <i class="item-icon {{ mark.iconClass }}"></i>
                           }
                         </div>
                         <div class="item-title">
