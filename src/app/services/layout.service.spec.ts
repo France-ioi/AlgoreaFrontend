@@ -150,6 +150,16 @@ describe('LayoutService', () => {
       expect(shown).toBeTrue();
     });
 
+    it('on a narrow screen, keeps the menu open after leaving the full-frame layout when other layout inputs change', () => {
+      start(true);
+      display(ContentDisplayType.ShowFullFrame);
+      display(ContentDisplayType.Show);
+      toggle(true);
+      service.configure({ canShowLeftMenu: true });
+      tick();
+      expect(shown).toBeTrue();
+    });
+
     it('shows the menu when widening the window outside the full-frame layout', () => {
       start(true);
       display(ContentDisplayType.Show);

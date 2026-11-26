@@ -32,6 +32,8 @@ interface LeftMenuState {
   display: ContentDisplay,
   /** Whether the full-frame auto-hide no longer applies to the current content (already done, or overridden by the user). */
   fullFrameHideSettled: boolean,
+  /** Whether the current content has been in the full-frame layout: its later ordinary task layout is not a fresh task page. */
+  enteredFullFrame: boolean,
 }
 
 // Top-level route paths displayed without the left navigation tree (compact mode).
@@ -109,24 +111,37 @@ export class LayoutService implements OnDestroy {
     )),
     scan((prev: LeftMenuState, [ isNarrowScreen, canShowLeftMenu, display, manualMenuToggle ], idx): LeftMenuState => {
       const sameContent = prev.display.contentId === display.contentId;
-      const next = { isNarrowScreen, display, fullFrameHideSettled: sameContent && prev.fullFrameHideSettled };
       const isFullFrame = display.type === ContentDisplayType.ShowFullFrame;
+      const next = {
+        isNarrowScreen,
+        display,
+        fullFrameHideSettled: sameContent && prev.fullFrameHideSettled,
+        enteredFullFrame: (sameContent && prev.enteredFullFrame) || isFullFrame,
+      };
       if (!canShowLeftMenu) return { ...next, shown: false, animated: false };
       if (idx === 0) return { ...next, shown: !isNarrowScreen, animated: false };
-      if (prev.isNarrowScreen !== isNarrowScreen) return { ...next, shown: !isNarrowScreen && !isFullFrame, animated: true };
+      if (prev.isNarrowScreen !== isNarrowScreen) {
+        // A full-frame entry absorbed by this resize already leaves the menu hidden: do not replay its auto-hide later.
+        const fullFrameHideSettled = next.fullFrameHideSettled || isFullFrame;
+        return { ...next, shown: !isNarrowScreen && !isFullFrame, animated: true, fullFrameHideSettled };
+      }
       if (manualMenuToggle !== undefined) return { ...next, shown: manualMenuToggle, animated: true, fullFrameHideSettled: true };
       if (isFullFrame && !next.fullFrameHideSettled) {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         const preventFullFrame = typeof history.state === 'object' && Boolean(history.state?.preventFullFrame);
         return { ...next, shown: preventFullFrame ? prev.shown : false, animated: true, fullFrameHideSettled: true };
       }
-      const leavingFullFrame = sameContent && prev.display.type === ContentDisplayType.ShowFullFrame;
-      if (isNarrowScreen && display.type === ContentDisplayType.Show && !leavingFullFrame) {
+      if (isNarrowScreen && display.type === ContentDisplayType.Show && !next.enteredFullFrame) {
         return { ...next, shown: false, animated: true };
       }
       return { ...next, shown: prev.shown, animated: prev.animated };
     }, {
-      shown: false, animated: false, isNarrowScreen: false, display: { type: ContentDisplayType.Default }, fullFrameHideSettled: false,
+      shown: false,
+      animated: false,
+      isNarrowScreen: false,
+      display: { type: ContentDisplayType.Default },
+      fullFrameHideSettled: false,
+      enteredFullFrame: false,
     }),
     map(({ shown, animated }) => ({ shown, animated })),
     distinctUntilChanged((x, y) => x.shown === y.shown),
