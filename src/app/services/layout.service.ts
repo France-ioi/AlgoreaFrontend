@@ -19,6 +19,21 @@ export interface FullFrameContent {
 
 export enum ContentDisplayType { Default, Show, ShowFullFrame }
 
+interface ContentDisplay {
+  type: ContentDisplayType,
+  /** Identifies the displayed content (e.g. an item id) so menu choices can be scoped to it. */
+  contentId?: string,
+}
+
+interface LeftMenuState {
+  shown: boolean,
+  animated: boolean,
+  isNarrowScreen: boolean,
+  display: ContentDisplay,
+  /** Whether the full-frame auto-hide no longer applies to the current content (already done, or overridden by the user). */
+  fullFrameHideSettled: boolean,
+}
+
 // Top-level route paths displayed without the left navigation tree (compact mode).
 // These are app-structural pages (not instance content), so unlike `hideLeftMenuTreeOnItemIds`
 // they belong in app code rather than in the deployment config. Add a path here (e.g. 'community')
@@ -37,7 +52,7 @@ export class LayoutService implements OnDestroy {
   private urlSerializer = inject(UrlSerializer);
 
   /* state variables used to make decisions */
-  private contentDisplayType$ = new BehaviorSubject<ContentDisplayType>(ContentDisplayType.Default);
+  private contentDisplay$ = new BehaviorSubject<ContentDisplay>({ type: ContentDisplayType.Default });
   private manualMenuToggle$ = new Subject<boolean>();
 
   /* independant variables */
@@ -51,8 +66,8 @@ export class LayoutService implements OnDestroy {
     map(results => results.matches),
     distinctUntilChanged(),
   );
-  fullFrameContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.ShowFullFrame));
-  withLeftPaddingContentDisplayed$ = this.contentDisplayType$.pipe(map(t => t === ContentDisplayType.Show));
+  fullFrameContentDisplayed$ = this.contentDisplay$.pipe(map(d => d.type === ContentDisplayType.ShowFullFrame));
+  withLeftPaddingContentDisplayed$ = this.contentDisplay$.pipe(map(d => d.type === ContentDisplayType.Show));
   showTopRightControls$ = this.showTopRightControls.asObservable();
   canShowLeftMenu$ = this.canShowLeftMenu.asObservable();
   canShowBreadcrumbs$ = this.canShowBreadcrumbs.asObservable();
@@ -74,8 +89,9 @@ export class LayoutService implements OnDestroy {
    * - when enlarging the window size from mobile to non-mobile: show the menu if not showing a full-frame task
    * - when clicking on the show/hide hamburger menu, show/hide the menu
    * - on mobile, when clicking on a task in the left menu, close the menu
-   * - on non-mobile, hide the menu when opening a full-frame task (known when the task has been loaded), except if the it was open using
-   *   the left menu
+   * - when entering the full-frame layout, hide the menu once per content (e.g., per item), except if it was opened using the left menu
+   *   or if the user already showed/hid the menu on this content
+   * - when leaving the full-frame layout, leave the menu as it is
    * - otherwise, leave the menu as it is
    * Interesting case to be tested: on mobile, if opening a task via the menu (the menu hides) and closing the menu manually, the menu does
    * not re-hide when it knows it is a full-frame task
@@ -83,37 +99,41 @@ export class LayoutService implements OnDestroy {
   leftMenu$ = combineLatest([
     this.isNarrowScreen$,
     this.canShowLeftMenu,
-    this.contentDisplayType$
+    this.contentDisplay$
   ]).pipe(
     debounceTime(0), // as the sources are not independant, prevent some very-transient inconsistent cases
     // each time manualMenuToggle$ emits, emit its (bool) value, otherwise emit `undefined`
     switchMap(values => this.manualMenuToggle$.pipe(
-      map<boolean,[ boolean, boolean, ContentDisplayType, boolean|undefined ]>(manualMenuToggle => [ ...values, manualMenuToggle ]),
-      startWith<[ boolean, boolean, ContentDisplayType, boolean|undefined ]>([ ...values, undefined ])
+      map<boolean,[ boolean, boolean, ContentDisplay, boolean|undefined ]>(manualMenuToggle => [ ...values, manualMenuToggle ]),
+      startWith<[ boolean, boolean, ContentDisplay, boolean|undefined ]>([ ...values, undefined ])
     )),
-    scan((prev, [ isNarrowScreen, canShowLeftMenu, displayType, manualMenuToggle ], idx) => {
-      if (!canShowLeftMenu) return { shown: false, animated: false, isNarrowScreen };
-      if (idx === 0) return { shown: !isNarrowScreen, animated: false, isNarrowScreen };
-      if (prev.isNarrowScreen !== isNarrowScreen) {
-        return { shown: !isNarrowScreen && displayType !== ContentDisplayType.ShowFullFrame, animated: true, isNarrowScreen };
+    scan((prev: LeftMenuState, [ isNarrowScreen, canShowLeftMenu, display, manualMenuToggle ], idx): LeftMenuState => {
+      const sameContent = prev.display.contentId === display.contentId;
+      const next = { isNarrowScreen, display, fullFrameHideSettled: sameContent && prev.fullFrameHideSettled };
+      const isFullFrame = display.type === ContentDisplayType.ShowFullFrame;
+      if (!canShowLeftMenu) return { ...next, shown: false, animated: false };
+      if (idx === 0) return { ...next, shown: !isNarrowScreen, animated: false };
+      if (prev.isNarrowScreen !== isNarrowScreen) return { ...next, shown: !isNarrowScreen && !isFullFrame, animated: true };
+      if (manualMenuToggle !== undefined) return { ...next, shown: manualMenuToggle, animated: true, fullFrameHideSettled: true };
+      if (isFullFrame && !next.fullFrameHideSettled) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        const preventFullFrame = typeof history.state === 'object' && Boolean(history.state?.preventFullFrame);
+        return { ...next, shown: preventFullFrame ? prev.shown : false, animated: true, fullFrameHideSettled: true };
       }
-      if (manualMenuToggle !== undefined) return { shown: manualMenuToggle, animated: true, isNarrowScreen };
-      if (isNarrowScreen && displayType === ContentDisplayType.Show) {
-        return { shown: false, animated: true, isNarrowScreen };
+      const leavingFullFrame = sameContent && prev.display.type === ContentDisplayType.ShowFullFrame;
+      if (isNarrowScreen && display.type === ContentDisplayType.Show && !leavingFullFrame) {
+        return { ...next, shown: false, animated: true };
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      const preventFullFrame = typeof history.state === 'object' && Boolean(history.state?.preventFullFrame);
-      if (!preventFullFrame && displayType === ContentDisplayType.ShowFullFrame) {
-        return { shown: false, animated: true, isNarrowScreen };
-      }
-      return { ...prev, isNarrowScreen };
-    }, { shown: false, animated: false, isNarrowScreen: false }),
+      return { ...next, shown: prev.shown, animated: prev.animated };
+    }, {
+      shown: false, animated: false, isNarrowScreen: false, display: { type: ContentDisplayType.Default }, fullFrameHideSettled: false,
+    }),
     map(({ shown, animated }) => ({ shown, animated })),
     distinctUntilChanged((x, y) => x.shown === y.shown),
   );
 
   ngOnDestroy(): void {
-    this.contentDisplayType$.complete();
+    this.contentDisplay$.complete();
     this.manualMenuToggle$.complete();
     this.showTopRightControls.complete();
     this.canShowLeftMenu.complete();
@@ -124,14 +144,16 @@ export class LayoutService implements OnDestroy {
   /**
    * Configure layout.
    * The layout is considered not initialized (so not using animation) only until the first call.
+   * `contentId` goes with `contentDisplayType`: it scopes the full-frame menu auto-hide (and the user's menu choice) to that content.
    */
-  configure({ contentDisplayType, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls }: {
+  configure({ contentDisplayType, contentId, canShowLeftMenu, canShowBreadcrumbs, showTopRightControls }: {
     contentDisplayType?: ContentDisplayType,
+    contentId?: string,
     canShowLeftMenu?: boolean,
     canShowBreadcrumbs?: boolean,
     showTopRightControls?: boolean,
   }): void {
-    if (contentDisplayType !== undefined) this.contentDisplayType$.next(contentDisplayType);
+    if (contentDisplayType !== undefined) this.contentDisplay$.next({ type: contentDisplayType, contentId });
     if (canShowLeftMenu !== undefined) this.canShowLeftMenu.next(canShowLeftMenu);
     if (canShowBreadcrumbs !== undefined) this.canShowBreadcrumbs.next(canShowBreadcrumbs);
     if (showTopRightControls !== undefined) this.showTopRightControls.next(showTopRightControls);

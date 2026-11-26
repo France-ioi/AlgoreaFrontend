@@ -32,6 +32,7 @@ export class ItemContentSyncService {
   private breadcrumbsState = this.store.selectSignal(fromItemContent.selectActiveContentBreadcrumbsState);
   private routeErrorHandlingState = this.store.selectSignal(fromItemContent.selectActiveContentRouteErrorHandlingState);
   private fullFrameContentSig = toSignal(this.fullFrameContent$, { initialValue: false });
+  private isOnTaskTab = toSignal(this.itemTabs.isOnTaskTab$, { initialValue: false });
 
   // Guards against service redirect loops (wrong path → strip path → recover path → wrong path again). Holds the id
   // of the item we redirected for: scoping per item keeps the guard from staying armed when the user navigates to
@@ -137,13 +138,14 @@ export class ItemContentSyncService {
     const state = this.itemDataState();
     if (!state?.isReady) return;
     const data = state.data;
-    const fullFrame = this.fullFrameContentSig();
+    // The task iframe stays mounted on History (Events & Edits) while still reporting full frame: only task tabs get that layout.
+    const fullFrame = this.fullFrameContentSig() && this.isOnTaskTab();
     const display = fullFrame
       ? ContentDisplayType.ShowFullFrame
       : (isATask(data.item) ? ContentDisplayType.Show : ContentDisplayType.Default);
     const id = data.route.id;
     if (this.lastLayoutConfig?.id === id && this.lastLayoutConfig?.display === display) return;
     this.lastLayoutConfig = { id, display };
-    this.layoutService.configure({ contentDisplayType: display });
+    this.layoutService.configure({ contentDisplayType: display, contentId: id });
   }
 }

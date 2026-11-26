@@ -8,7 +8,7 @@
       [style.display]="isTearingDownTask() ? 'none' : 'flex'"
       [style.flex-direction]="isTearingDownTask() ? null : 'column'"
     >
-      @if (!(fullFrameContent$ | async) && !itemData.item.displaySettings.hideHeader) {
+      @if (!fullFrameContentDisplayed && !itemData.item.displaySettings.hideHeader) {
         <alg-item-header [itemData]="itemData" />
       }
       @if (showAccessCodeField$ | async) {

@@ -81,6 +81,11 @@ export class ItemTabs implements OnDestroy {
   currentTab$ = combineLatest([ this.taskTabs$, this.tabService.activeTab$ ]).pipe(
     map(([ taskViews, activeTab ]) => (activeTab ? { isTaskTab: taskViews.includes(activeTab), tag: activeTab } : undefined)),
   );
+  /** Whether the active tab shows the task canvas: Content, the children editor, or a view advertised by the task. */
+  isOnTaskTab$ = this.currentTab$.pipe(
+    map(t => !!t && (t.isTaskTab || t.tag === contentTab.tag || t.tag === childrenEditTab.tag)),
+    distinctUntilChanged(),
+  );
   currentTaskView$ = this.currentTab$.pipe( // track only task tab change to keep announcing existing views to task
     filter(isNotUndefined),
     filter(t => t?.isTaskTab),
