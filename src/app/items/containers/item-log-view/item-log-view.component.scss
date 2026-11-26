@@ -46,6 +46,19 @@
   margin: 0;
 }
 
+.history-chars-added,
+.history-chars-removed {
+  font-weight: 700;
+}
+
+.history-chars-added {
+  color: var(--toast-success-text, #256029);
+}
+
+.history-chars-removed {
+  color: var(--alg-failure-color, #910112);
+}
+
 .item-title-link {
   display: inline-block;
   margin-top: functions.toRem(5);

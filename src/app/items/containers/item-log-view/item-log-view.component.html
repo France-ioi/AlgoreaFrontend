@@ -104,12 +104,16 @@
                 @switch (column.field) {
                   @case ('activityType') {
                     @if (rowData.kind === 'checkpoint') {
+                      @let caption = checkpointCaption(rowData, expansion.isExpanded(rowData.checkpoint.id));
                       <div class="item-title-section">
                         <div class="item-title-section-left">
                           <i class="item-icon ph-duotone ph-floppy-disk"></i>
                         </div>
                         <div class="item-title">
-                          <p class="item-title-caption">{{ checkpointCaption(rowData) }}</p>
+                          <p class="item-title-caption">
+                            {{ caption.lead }} · <span class="history-chars-added">+{{ caption.added }}</span>{{ ' ' }}
+                            <span class="history-chars-removed">-{{ caption.removed }}</span>
+                          </p>
                           <div class="history-row-actions">
                             <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
                               Restore
@@ -118,12 +122,16 @@
                         </div>
                       </div>
                     } @else if (rowData.kind === 'edit') {
+                      @let caption = editCaption(rowData.edit);
                       <div class="item-title-section">
                         <div class="item-title-section-left">
                           <i class="item-icon ph ph-floppy-disk"></i>
                         </div>
                         <div class="item-title">
-                          <p class="item-title-caption">{{ editCaption(rowData.edit) }}</p>
+                          <p class="item-title-caption">
+                            {{ caption.lead }} · <span class="history-chars-added">+{{ caption.added }}</span>{{ ' ' }}
+                            <span class="history-chars-removed">-{{ caption.removed }}</span>
+                          </p>
                           <div class="history-row-actions">
                             <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)" i18n>
                               Restore
