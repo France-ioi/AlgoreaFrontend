@@ -46,6 +46,19 @@
   margin: 0;
 }
 
+.history-chars-added,
+.history-chars-removed {
+  font-weight: 700;
+}
+
+.history-chars-added {
+  color: var(--toast-success-text, #256029);
+}
+
+.history-chars-removed {
+  color: var(--alg-failure-color, #910112);
+}
+
 .item-title-link {
   display: inline-block;
   margin-top: functions.toRem(5);
@@ -56,6 +69,80 @@
   flex-wrap: wrap;
   gap: functions.toRem(12);
   margin-top: functions.toRem(5);
+}
+
+:host .alg-table-th.history-edits-cell,
+:host .alg-table-td.history-edits-cell {
+  width: 1%;
+  padding-left: functions.toRem(8);
+  padding-right: 0;
+  text-align: left;
+  vertical-align: middle;
+  position: relative;
+}
+
+:host .history-edits-cell + .alg-table-th,
+:host .history-edits-cell + .alg-table-td {
+  padding-left: functions.toRem(4);
+}
+
+.history-edits-stem::before,
+.history-edits-line::before,
+.history-edits-end::before {
+  content: '';
+  position: absolute;
+  // Padding plus half the caret, so the line sits under the chevron.
+  left: functions.toRem(16);
+  width: 1px;
+  background: var(--alg-secondary-color, #5c6b7a);
+  opacity: 0.45;
+  transform: translateX(-50%);
+}
+
+.history-edits-stem::before {
+  top: calc(50% + #{functions.toRem(12)});
+  bottom: 0;
+}
+
+.history-edits-line::before {
+  top: 0;
+  bottom: 0;
+}
+
+.history-edits-end::before {
+  top: 0;
+  bottom: 50%;
+}
+
+.history-edits-toggle {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  color: var(--alg-primary-color, #0F61FF);
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.5;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .history-row-actions .alg-link {

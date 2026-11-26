@@ -62,6 +62,36 @@ export function insertExpandedEdits(
   });
 }
 
+export type EditSpanMark = 'none' | 'stem' | 'line' | 'end';
+
+/**
+ * Marks the disclosure column for open checkpoint spans.
+ * stem: the open checkpoint, line starts under its chevron.
+ * line: rows between that checkpoint and its oldest shown edit.
+ * end: that oldest edit, where the line stops midway through the cell.
+ * A submission between those edits is included. Rows after the last edit are not.
+ */
+export function editSpanLine(rows: HistoryDisplayRow[]): EditSpanMark[] {
+  const marks: EditSpanMark[] = rows.map(() => 'none');
+  const editIndexes = new Map<number, number[]>();
+  rows.forEach((row, index) => {
+    if (row.kind !== 'edit') return;
+    const indexes = editIndexes.get(row.checkpointId) ?? [];
+    indexes.push(index);
+    editIndexes.set(row.checkpointId, indexes);
+  });
+  rows.forEach((row, index) => {
+    if (row.kind !== 'checkpoint') return;
+    const below = (editIndexes.get(row.checkpoint.id) ?? []).filter(editIndex => editIndex > index);
+    if (below.length === 0) return;
+    const lastEdit = Math.max(...below);
+    marks[index] = 'stem';
+    for (let cursor = index + 1; cursor < lastEdit; cursor++) marks[cursor] = 'line';
+    marks[lastEdit] = 'end';
+  });
+  return marks;
+}
+
 export function checkpointEditsToggleLabel(count: number, expanded: boolean): string {
   if (expanded) {
     return count === 1

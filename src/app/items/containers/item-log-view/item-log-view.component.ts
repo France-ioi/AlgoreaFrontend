@@ -22,7 +22,7 @@ import { fromObservation } from 'src/app/store/observation';
 import { isUser } from 'src/app/models/routing/group-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRouteWith } from 'src/app/models/routing/item-route';
-import { LogActivityTypeIconPipe } from 'src/app/pipes/logActivityTypeIcon';
+import { activityRowMark } from 'src/app/pipes/activityRowMark';
 import { ButtonComponent } from 'src/app/ui-components/button/button.component';
 import { BackLinkBarComponent } from 'src/app/ui-components/back-link-bar/back-link-bar.component';
 import { fromItemContent } from 'src/app/items/store';
@@ -35,7 +35,7 @@ import { ItemLoadedTaskRegistry } from '../../services/item-loaded-task-registry
 import { FetchState, fetchingState, mapStateData } from 'src/app/utils/state';
 import { HistoryListRow, activityLogsToEventRows } from './history-list-merge';
 import { checkpointCaption, editCaption } from './history-checkpoint-caption';
-import { HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
+import { editSpanLine, HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
 import { HistoryCheckpointExpansion } from './history-checkpoint-expansion';
 import { HistoryModeMemory, chooseHistoryMode, followHistoryMode } from './history-mode-sync';
 import { HistoryEditsFacade } from './history-edits-facade';
@@ -58,7 +58,7 @@ import { canCurrentUserWatchAnswers } from 'src/app/items/models/item-watch-perm
   imports: [
     LoadingComponent, ErrorComponent, RouterLink, ScoreRingComponent, AsyncPipe,
     ItemRoutePipe, ItemRouteWithExtraPipe, RouteUrlPipe, UserLinkWithActionsComponent,
-    LogActionDisplayPipe, RelativeTimeComponent, LogActivityTypeIconPipe, ButtonComponent,
+    LogActionDisplayPipe, RelativeTimeComponent, ButtonComponent,
     BackLinkBarComponent, SelectionComponent, CdkTable, CdkColumnDef, CdkHeaderCell,
     CdkHeaderCellDef, CdkCellDef, CdkCell, CdkHeaderRow, CdkHeaderRowDef, CdkRow, CdkRowDef, CdkNoDataRow,
   ]
@@ -206,12 +206,17 @@ export class ItemLogViewComponent {
     return insertExpandedEdits(rows, this.expansion.expandedEdits());
   });
 
+  readonly editSpanMarks = computed(() => editSpanLine(this.displayedRows()));
+
   readonly columns$ = combineLatest([
     this.item$.pipe(distinctUntilChanged()),
     this.store.select(fromObservation.selectObservedGroupRoute),
   ]).pipe(map(([ item, observedGroupRoute ]) => historyLogColumns(item.type, observedGroupRoute)));
   columns = toSignal(this.columns$, { initialValue: [] as HistoryLogColumn[] });
-  displayedColumns = computed(() => this.columns().map(column => column.field));
+  displayedColumns = computed(() => {
+    const fields = this.columns().map(column => column.field);
+    return this.mode() === 'events_and_edits' ? [ 'edits', ...fields ] : fields;
+  });
 
   constructor() {
     this.destroyRef.onDestroy(() => {
@@ -334,6 +339,7 @@ export class ItemLogViewComponent {
   }
 
   readonly checkpointCaption = checkpointCaption;
+  readonly activityRowMark = activityRowMark;
   readonly editCaption = editCaption;
 
   private applyMode(next: HistoryViewMode): void {

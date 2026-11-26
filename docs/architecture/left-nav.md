@@ -21,6 +21,10 @@ alg-left-panel          → outer shell: header + tabbed-content
 
 `LayoutService.isNarrowScreen$` and layout SCSS use `(max-width: 699.98px)` — constants live in `src/app/utils/layout-breakpoints.ts` and `src/assets/scss/breakpoints.scss` (must stay in sync). On narrow viewports the left menu overlays content, sign-in/profile controls sit at the bottom of the tab rail, and top-bar login is hidden.
 
+## Full-frame layout and the menu
+
+The item page requests the full-frame layout (`ContentDisplayType.ShowFullFrame`) only while a task tab is active (Content, the children editor, or a view the task advertises) and the task reports full frame. History keeps the normal layout even when Events & Edits mounts the task. `LayoutService.leftMenu$` hides the menu the first time an item enters full frame, unless the item was opened from the left menu (`preventFullFrame`) or the user already showed or hid the menu on that item. Leaving full frame never moves the menu. The scope is the `contentId` passed to `LayoutService.configure` (the item id), so switching attempts keeps the user's choice and switching items resets it.
+
 ## Nav fetch cache
 
 `NavTreeService` caches l1 (siblings) and l2 (children) fetches per `(path, attempt)` — children keyed by the item's own attempt, siblings by its parent attempt — so switching attempt on the same item refetches only the children. When the route omits the relevant attempt key (legacy XOR of `a=` / `pa=`), matching falls back to path-only so child navigation still reuses l2. Group trees omit attempts and keep path-only reuse.

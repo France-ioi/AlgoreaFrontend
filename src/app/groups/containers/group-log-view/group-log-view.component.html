@@ -33,12 +33,11 @@
             <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
               <div class="item-title-section">
                 <div class="item-title-section-left">
-                  @if (rowData.score) {
-                    <alg-score-ring [currentScore]="rowData.score"
-                      [diameter]="32"
-                     />
-                  } @else {
-                    <i class="item-icon {{ rowData.activityType | logActivityTypeIcon }}"></i>
+                  @let mark = activityRowMark(rowData.activityType, rowData.score);
+                  @if (mark.kind === 'score') {
+                    <alg-score-ring [currentScore]="rowData.score ?? 0" [diameter]="32" />
+                  } @else if (mark.iconClass) {
+                    <i class="item-icon {{ mark.iconClass }}"></i>
                   }
                 </div>
                 <div class="item-title">

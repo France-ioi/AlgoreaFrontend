@@ -1,6 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { BehaviorSubject } from 'rxjs';
 import { Item } from 'src/app/data-access/get-item-by-id.service';
 import { FullItemRoute, itemRoute } from 'src/app/models/routing/item-route';
 import { ItemRouter } from 'src/app/models/routing/item-router';
@@ -68,7 +69,8 @@ describe('ItemContentSyncService', () => {
   let store: MockStore;
   let currentContent: jasmine.SpyObj<Pick<CurrentContentService, 'replace' | 'clear'>>;
   let layoutService: jasmine.SpyObj<Pick<LayoutService, 'configure'>>;
-  let itemTabs: jasmine.SpyObj<Pick<ItemTabs, 'itemChanged'>>;
+  let itemTabs: jasmine.SpyObj<Pick<ItemTabs, 'itemChanged' | 'isOnTaskTab$'>>;
+  let isOnTaskTab$: BehaviorSubject<boolean>;
   let itemRouter: jasmine.SpyObj<Pick<ItemRouter, 'navigateTo'>>;
 
   const route1 = itemRoute('activity', '1', { attemptId: '0', path: [] });
@@ -79,7 +81,8 @@ describe('ItemContentSyncService', () => {
   beforeEach(() => {
     currentContent = jasmine.createSpyObj('CurrentContentService', [ 'replace', 'clear' ]);
     layoutService = jasmine.createSpyObj('LayoutService', [ 'configure' ]);
-    itemTabs = jasmine.createSpyObj('ItemTabs', [ 'itemChanged' ]);
+    isOnTaskTab$ = new BehaviorSubject(true);
+    itemTabs = jasmine.createSpyObj('ItemTabs', [ 'itemChanged' ], { isOnTaskTab$ });
     itemRouter = jasmine.createSpyObj('ItemRouter', [ 'navigateTo' ]);
 
     TestBed.configureTestingModule({
@@ -108,8 +111,36 @@ describe('ItemContentSyncService', () => {
 
     expect(currentContent.replace).toHaveBeenCalledTimes(1);
     expect(layoutService.configure).toHaveBeenCalledTimes(1);
-    expect(layoutService.configure).toHaveBeenCalledWith({ contentDisplayType: ContentDisplayType.Show });
+    expect(layoutService.configure).toHaveBeenCalledWith({ contentDisplayType: ContentDisplayType.Show, contentId: '1' });
     expect(itemTabs.itemChanged).toHaveBeenCalledTimes(1);
+  });
+
+  it('requests the full-frame layout when the task is full frame and a task tab is active', () => {
+    TestBed.flushEffects();
+    layoutService.configure.calls.reset();
+
+    TestBed.inject(ItemContentSyncService).fullFrameContent$.next(true);
+    TestBed.flushEffects();
+
+    expect(layoutService.configure).toHaveBeenCalledOnceWith({ contentDisplayType: ContentDisplayType.ShowFullFrame, contentId: '1' });
+  });
+
+  it('keeps the normal layout while a non-task tab is active, even if the loaded task is full frame', () => {
+    isOnTaskTab$.next(false);
+    TestBed.flushEffects();
+    layoutService.configure.calls.reset();
+
+    TestBed.inject(ItemContentSyncService).fullFrameContent$.next(true);
+    TestBed.flushEffects();
+    expect(layoutService.configure).not.toHaveBeenCalled();
+
+    isOnTaskTab$.next(true);
+    TestBed.flushEffects();
+    expect(layoutService.configure).toHaveBeenCalledOnceWith({ contentDisplayType: ContentDisplayType.ShowFullFrame, contentId: '1' });
+
+    isOnTaskTab$.next(false);
+    TestBed.flushEffects();
+    expect(layoutService.configure).toHaveBeenCalledWith({ contentDisplayType: ContentDisplayType.Show, contentId: '1' });
   });
 
   it('does not reset tabs while item data is refetching', () => {
