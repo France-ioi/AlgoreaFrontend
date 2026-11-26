@@ -77,7 +77,7 @@ export function shouldShowHistoryModeSelection(
   loaded: LoadedItemTask | null,
 ): boolean {
   if (itemType !== 'Task') return false;
-  if (observedGroupRoute && !isUser(observedGroupRoute)) return false;
+  if (isObservingGroup(observedGroupRoute)) return false;
   if (observedGroupRoute && isUser(observedGroupRoute)) {
     if (!canWatchAnswers) return false;
     if (editsAttemptId === undefined) return false;
@@ -86,15 +86,21 @@ export function shouldShowHistoryModeSelection(
   return true;
 }
 
+export function isObservingGroup(observedGroupRoute: ObservedGroupForHistoryMode): boolean {
+  return !!observedGroupRoute && !isUser(observedGroupRoute);
+}
+
 /**
  * Default to Events & Edits only when the signed-in user's checkpoints are already available.
  * Observers always start on Events only so opening History does not load the student's task.
+ * A group has no editor history: a loaded task there is the observer's own, so it must not count.
  */
 export function initialHistoryViewMode(
   editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
   observedUserId: string | null,
+  observingGroup: boolean,
 ): HistoryViewMode {
-  if (observedUserId) return 'events';
+  if (observedUserId || observingGroup) return 'events';
   return canShowEventsAndEdits(editsAttemptId, loaded, null) ? 'events_and_edits' : 'events';
 }
