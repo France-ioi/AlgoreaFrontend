@@ -43,7 +43,7 @@ import { fetchAllActivityLog, fetchAttemptActivityLog$ } from './history-edits-l
 import { historyEditsPageSize } from './history-edits-pager';
 import { HistoryLogColumn, historyLogColumns } from './history-log-columns';
 import {
-  attemptNumberForLabel, HistoryViewMode, historyModeOptions,
+  attemptNumberForLabel, HistoryViewMode, historyModeOptions, isObservingGroup,
   newestActivityLogAttemptId, observerEditsAttemptId,
   shouldShowHistoryModeSelection,
 } from './history-view-mode';
@@ -139,6 +139,7 @@ export class ItemLogViewComponent {
   private readonly observedGroupForMode = computed(() =>
     this.itemData().route.observedGroup ?? this.observedGroupRoute()
   );
+  private readonly observingGroup = computed(() => isObservingGroup(this.observedGroupForMode()));
 
   datapager = new DataPager({
     fetch: (pageSize, latestRow?: ActivityLogs[number]): Observable<ActivityLogs> =>
@@ -230,12 +231,14 @@ export class ItemLogViewComponent {
       const loaded = this.loadedTask();
       const editsAttemptId = this.editsAttemptId();
       const observedUserId = this.observedUserId();
+      const observingGroup = this.observingGroup();
       untracked(() => followHistoryMode(
         this.modeMemory,
         nav,
         editsAttemptId,
         loaded,
         observedUserId,
+        observingGroup,
         this.mode(),
         {
           clearExpansions: () => this.expansion.clear(),

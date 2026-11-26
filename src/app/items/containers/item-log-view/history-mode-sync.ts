@@ -19,6 +19,7 @@ export function followHistoryMode(
   editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
   observedUserId: string | null,
+  observingGroup: boolean,
   mode: HistoryViewMode,
   actions: {
     clearExpansions: () => void,
@@ -26,7 +27,7 @@ export function followHistoryMode(
     reload: () => void,
   },
 ): void {
-  const step = historyModeStep(memory, nav, editsAttemptId, loaded, observedUserId, mode);
+  const step = historyModeStep(memory, nav, editsAttemptId, loaded, observedUserId, observingGroup, mode);
   if (step.type === 'reload') {
     actions.reload();
     return;
@@ -73,6 +74,7 @@ export function chooseHistoryMode(
 /**
  * Decide the next History mode from navigation and the loaded task.
  * A user's "Events only" choice sticks until they leave the page or the task has no editor history.
+ * While observing a group, History is always Events only: any loaded task is the observer's own.
  */
 export function historyModeStep(
   memory: HistoryModeMemory,
@@ -80,8 +82,16 @@ export function historyModeStep(
   editsAttemptId: string | undefined,
   loaded: LoadedItemTask | null,
   observedUserId: string | null,
+  observingGroup: boolean,
   mode: HistoryViewMode,
 ): HistoryModeStep {
+  if (observingGroup) {
+    const navChanged = nav !== memory.seenNavigationKey;
+    memory.seenNavigationKey = nav;
+    memory.userChoseEventsOnly = false;
+    memory.pendingEditsLoad = false;
+    return navChanged || mode !== 'events' ? { type: 'apply', mode: 'events', clearExpansions: true } : { type: 'none' };
+  }
   if (nav !== memory.seenNavigationKey) {
     memory.seenNavigationKey = nav;
     if (memory.pendingEditsLoad) {
@@ -92,7 +102,7 @@ export function historyModeStep(
     memory.userChoseEventsOnly = false;
     return {
       type: 'apply',
-      mode: initialHistoryViewMode(editsAttemptId, loaded, observedUserId),
+      mode: initialHistoryViewMode(editsAttemptId, loaded, observedUserId, observingGroup),
       clearExpansions: true,
     };
   }

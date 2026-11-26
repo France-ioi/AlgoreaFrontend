@@ -2,6 +2,7 @@ import {
   attemptNumberForLabel,
   canShowEventsAndEdits,
   initialHistoryViewMode,
+  isObservingGroup,
   newestActivityLogAttemptId,
   observerEditsAttemptId,
   shouldShowHistoryModeSelection,
@@ -155,15 +156,35 @@ describe('history-view-mode helpers', () => {
     });
   });
 
+  describe('isObservingGroup', () => {
+    it('is true only for a non-user observation', () => {
+      expect(isObservingGroup(null)).toBeFalse();
+      expect(isObservingGroup(rawGroupRoute({ id: 'u1', isUser: true }))).toBeFalse();
+      expect(isObservingGroup(rawGroupRoute({ id: 'g1', isUser: false }))).toBeTrue();
+      expect(isObservingGroup({ id: 'g1', isUser: false })).toBeTrue();
+    });
+  });
+
   describe('initialHistoryViewMode', () => {
     it('selects Events & Edits only for the signed-in user when checkpoints are already available', () => {
-      expect(initialHistoryViewMode('0', ownLoaded(), null)).toBe('events_and_edits');
-      expect(initialHistoryViewMode('0', null, null)).toBe('events');
-      expect(initialHistoryViewMode('1', ownLoaded(), null)).toBe('events');
+      expect(initialHistoryViewMode('0', ownLoaded(), null, false)).toBe('events_and_edits');
+      expect(initialHistoryViewMode('0', null, null, false)).toBe('events');
+      expect(initialHistoryViewMode('1', ownLoaded(), null, false)).toBe('events');
     });
 
     it('always starts on Events only while observing a user', () => {
-      expect(initialHistoryViewMode('0', observedLoaded('u1'), 'u1')).toBe('events');
+      expect(initialHistoryViewMode('0', observedLoaded('u1'), 'u1', false)).toBe('events');
+    });
+
+    it('starts on Events only while observing a group, even when the signed-in user task saves editor history', () => {
+      expect(initialHistoryViewMode('0', ownLoaded(), null, true)).toBe('events');
+      expect(shouldShowHistoryModeSelection(
+        'Task',
+        rawGroupRoute({ id: 'g1', isUser: false }),
+        true,
+        '0',
+        ownLoaded(),
+      )).toBeFalse();
     });
   });
 });
