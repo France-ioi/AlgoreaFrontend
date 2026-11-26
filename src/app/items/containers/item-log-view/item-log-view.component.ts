@@ -35,7 +35,7 @@ import { ItemLoadedTaskRegistry } from '../../services/item-loaded-task-registry
 import { FetchState, fetchingState, mapStateData } from 'src/app/utils/state';
 import { HistoryListRow, activityLogsToEventRows } from './history-list-merge';
 import { checkpointCaption, editCaption } from './history-checkpoint-caption';
-import { HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
+import { editSpanLine, HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
 import { HistoryCheckpointExpansion } from './history-checkpoint-expansion';
 import { HistoryModeMemory, chooseHistoryMode, followHistoryMode } from './history-mode-sync';
 import { HistoryEditsFacade } from './history-edits-facade';
@@ -205,6 +205,8 @@ export class ItemLogViewComponent {
     if (this.mode() !== 'events_and_edits') return rows;
     return insertExpandedEdits(rows, this.expansion.expandedEdits());
   });
+
+  readonly editSpanMarks = computed(() => editSpanLine(this.displayedRows()));
 
   readonly columns$ = combineLatest([
     this.item$.pipe(distinctUntilChanged()),

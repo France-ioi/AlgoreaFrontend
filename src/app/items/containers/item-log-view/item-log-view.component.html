@@ -64,10 +64,16 @@
       <div class="alg-table-horizontal-scroll">
         <table class="alg-table-v2" cdk-table [dataSource]="displayedRows()">
           <ng-container cdkColumnDef="edits">
-            <th class="alg-table-th" cdk-header-cell *cdkHeaderCellDef>
+            <th class="alg-table-th history-edits-cell" cdk-header-cell *cdkHeaderCellDef>
               <span class="visually-hidden" i18n>Edits</span>
             </th>
-            <td class="alg-table-td" cdk-cell *cdkCellDef="let rowData">
+            <td
+              class="alg-table-td history-edits-cell"
+              cdk-cell
+              *cdkCellDef="let rowData; let i = index"
+              [class.history-edits-stem]="editSpanMarks()[i] === 'stem'"
+              [class.history-edits-line]="editSpanMarks()[i] === 'line'"
+            >
               @if (
                 rowData.kind === 'checkpoint'
                 && (rowData.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0) > 0
@@ -76,6 +82,7 @@
                   type="button"
                   class="history-edits-toggle"
                   [attr.aria-expanded]="expansion.isExpanded(rowData.checkpoint.id)"
+                  [attr.aria-label]="expansion.toggleLabel(rowData)"
                   [disabled]="expansion.loadingCheckpointId() === rowData.checkpoint.id"
                   (click)="toggleCheckpoint(rowData)"
                 >
@@ -83,8 +90,9 @@
                     class="ph"
                     [class.ph-caret-down]="expansion.isExpanded(rowData.checkpoint.id)"
                     [class.ph-caret-right]="!expansion.isExpanded(rowData.checkpoint.id)"
+                    aria-hidden="true"
                   ></i>
-                  {{ expansion.toggleLabel(rowData) }}
+                  <span aria-hidden="true">{{ expansion.toggleCount(rowData) }}</span>
                 </button>
               }
             </td>

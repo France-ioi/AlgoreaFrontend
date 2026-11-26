@@ -58,10 +58,42 @@
   margin-top: functions.toRem(5);
 }
 
+:host .alg-table-th.history-edits-cell,
+:host .alg-table-td.history-edits-cell {
+  width: 1%;
+  padding-left: functions.toRem(10);
+  padding-right: functions.toRem(6);
+  text-align: left;
+  vertical-align: middle;
+  position: relative;
+}
+
+.history-edits-stem::before,
+.history-edits-line::before {
+  content: '';
+  position: absolute;
+  // Padding plus half the caret, so the line sits under the chevron rather than under the count.
+  left: functions.toRem(18);
+  width: 1px;
+  background: var(--alg-secondary-color, #5c6b7a);
+  opacity: 0.45;
+  transform: translateX(-50%);
+}
+
+.history-edits-stem::before {
+  top: 50%;
+  bottom: 0;
+}
+
+.history-edits-line::before {
+  top: 0;
+  bottom: 0;
+}
+
 .history-edits-toggle {
   display: inline-flex;
   align-items: center;
-  gap: functions.toRem(4);
+  gap: functions.toRem(2);
   padding: 0;
   border: 0;
   background: none;
@@ -69,6 +101,8 @@
   font: inherit;
   color: var(--alg-primary-color, #0F61FF);
   white-space: nowrap;
+  position: relative;
+  z-index: 1;
 
   &:disabled {
     cursor: default;

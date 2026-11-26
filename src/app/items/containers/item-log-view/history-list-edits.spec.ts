@@ -1,4 +1,4 @@
-import { checkpointEditQuery, HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
+import { checkpointEditQuery, editSpanLine, HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
 import { HistoryListRow } from './history-list-merge';
 import { ActivityLogs } from 'src/app/data-access/activity-log.service';
 import { TaskHistoryElement } from 'src/app/items/api/types';
@@ -88,7 +88,63 @@ describe('insertExpandedEdits', () => {
 
     expect(insertExpandedEdits(rows, new Map())).toEqual(rows);
   });
+});
 
+describe('editSpanLine', () => {
+  it('draws a stem on the open checkpoint and a line through the last edit, including a submission between the edits', () => {
+    const newer = element(3, '2024-01-01T12:03:00Z', true, 2);
+    const older = element(1, '2024-01-01T12:00:00Z', true, 0);
+    const editA = element(4, '2024-01-01T12:02:00Z', false);
+    const editB = element(2, '2024-01-01T12:01:00Z', false);
+    const rows: HistoryListRow[] = [
+      { kind: 'checkpoint', at: new Date(newer.datetime), checkpoint: newer },
+      { kind: 'event', at: new Date('2024-01-01T12:01:30Z'), event: event('2024-01-01T12:01:30Z') },
+      { kind: 'checkpoint', at: new Date(older.datetime), checkpoint: older },
+      { kind: 'event', at: new Date('2024-01-01T11:00:00Z'), event: event('2024-01-01T11:00:00Z') },
+    ];
+    const expanded = insertExpandedEdits(rows, new Map([[ 3, [ newer, editA, editB ] ]]));
+
+    expect(labels(expanded)).toEqual([
+      'checkpoint:3',
+      'edit:4',
+      'event:submission',
+      'edit:2',
+      'checkpoint:1',
+      'event:submission',
+    ]);
+    expect(editSpanLine(expanded)).toEqual([ 'stem', 'line', 'line', 'line', 'none', 'none' ]);
+  });
+
+  it('keeps each open checkpoint on its own stretch', () => {
+    const newer = element(5, '2024-01-01T12:04:00Z', true, 1);
+    const older = element(2, '2024-01-01T12:02:00Z', true, 1);
+    const editNewer = element(4, '2024-01-01T12:03:00Z', false);
+    const editOlder = element(1, '2024-01-01T12:01:00Z', false);
+    const rows: HistoryListRow[] = [
+      { kind: 'checkpoint', at: new Date(newer.datetime), checkpoint: newer },
+      { kind: 'checkpoint', at: new Date(older.datetime), checkpoint: older },
+      { kind: 'event', at: new Date('2024-01-01T11:00:00Z'), event: event('2024-01-01T11:00:00Z') },
+    ];
+    const expanded = insertExpandedEdits(rows, new Map([
+      [ 5, [ newer, editNewer ] ],
+      [ 2, [ older, editOlder ] ],
+    ]));
+
+    expect(editSpanLine(expanded)).toEqual([ 'stem', 'line', 'stem', 'line', 'none' ]);
+  });
+
+  it('draws nothing while a checkpoint is collapsed', () => {
+    const checkpoint = element(3, '2024-01-01T12:02:00Z', true, 2);
+    const rows: HistoryDisplayRow[] = [
+      { kind: 'checkpoint', at: new Date(checkpoint.datetime), checkpoint },
+      { kind: 'event', at: new Date('2024-01-01T12:01:00Z'), event: event('2024-01-01T12:01:00Z') },
+    ];
+
+    expect(editSpanLine(rows)).toEqual([ 'none', 'none' ]);
+  });
+});
+
+describe('same-second ordering', () => {
   it('places a checkpoint above an edit above an event at the same second', () => {
     const at = '2024-01-01T12:00:00Z';
     const checkpoint = element(3, at, true, 1);
