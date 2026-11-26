@@ -62,12 +62,13 @@ export function insertExpandedEdits(
   });
 }
 
-export type EditSpanMark = 'none' | 'stem' | 'line';
+export type EditSpanMark = 'none' | 'stem' | 'line' | 'end';
 
 /**
  * Marks the disclosure column for open checkpoint spans.
  * stem: the open checkpoint, line starts under its chevron.
- * line: rows from just below that checkpoint through its oldest shown edit.
+ * line: rows between that checkpoint and its oldest shown edit.
+ * end: that oldest edit, where the line stops midway through the cell.
  * A submission between those edits is included. Rows after the last edit are not.
  */
 export function editSpanLine(rows: HistoryDisplayRow[]): EditSpanMark[] {
@@ -85,7 +86,8 @@ export function editSpanLine(rows: HistoryDisplayRow[]): EditSpanMark[] {
     if (below.length === 0) return;
     const lastEdit = Math.max(...below);
     marks[index] = 'stem';
-    for (let cursor = index + 1; cursor <= lastEdit; cursor++) marks[cursor] = 'line';
+    for (let cursor = index + 1; cursor < lastEdit; cursor++) marks[cursor] = 'line';
+    marks[lastEdit] = 'end';
   });
   return marks;
 }

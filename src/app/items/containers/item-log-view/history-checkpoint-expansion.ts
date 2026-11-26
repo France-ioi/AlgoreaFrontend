@@ -25,10 +25,6 @@ export class HistoryCheckpointExpansion {
     return checkpointEditsToggleLabel(count, this.isExpanded(row.checkpoint.id));
   }
 
-  toggleCount(row: HistoryListRow & { kind: 'checkpoint' }): string {
-    return String(row.checkpoint.sinceEarlierCheckpoint?.elementsCount ?? 0);
-  }
-
   toggle(
     row: HistoryListRow & { kind: 'checkpoint' },
     task: Task | undefined,

@@ -61,19 +61,25 @@
 :host .alg-table-th.history-edits-cell,
 :host .alg-table-td.history-edits-cell {
   width: 1%;
-  padding-left: functions.toRem(10);
-  padding-right: functions.toRem(6);
+  padding-left: functions.toRem(8);
+  padding-right: 0;
   text-align: left;
   vertical-align: middle;
   position: relative;
 }
 
+:host .history-edits-cell + .alg-table-th,
+:host .history-edits-cell + .alg-table-td {
+  padding-left: functions.toRem(4);
+}
+
 .history-edits-stem::before,
-.history-edits-line::before {
+.history-edits-line::before,
+.history-edits-end::before {
   content: '';
   position: absolute;
-  // Padding plus half the caret, so the line sits under the chevron rather than under the count.
-  left: functions.toRem(18);
+  // Padding plus half the caret, so the line sits under the chevron.
+  left: functions.toRem(16);
   width: 1px;
   background: var(--alg-secondary-color, #5c6b7a);
   opacity: 0.45;
@@ -81,7 +87,7 @@
 }
 
 .history-edits-stem::before {
-  top: 50%;
+  top: calc(50% + #{functions.toRem(12)});
   bottom: 0;
 }
 
@@ -90,10 +96,14 @@
   bottom: 0;
 }
 
+.history-edits-end::before {
+  top: 0;
+  bottom: 50%;
+}
+
 .history-edits-toggle {
   display: inline-flex;
   align-items: center;
-  gap: functions.toRem(2);
   padding: 0;
   border: 0;
   background: none;

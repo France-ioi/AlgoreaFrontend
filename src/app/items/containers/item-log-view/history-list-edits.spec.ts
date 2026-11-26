@@ -112,7 +112,7 @@ describe('editSpanLine', () => {
       'checkpoint:1',
       'event:submission',
     ]);
-    expect(editSpanLine(expanded)).toEqual([ 'stem', 'line', 'line', 'line', 'none', 'none' ]);
+    expect(editSpanLine(expanded)).toEqual([ 'stem', 'line', 'line', 'end', 'none', 'none' ]);
   });
 
   it('keeps each open checkpoint on its own stretch', () => {
@@ -130,7 +130,7 @@ describe('editSpanLine', () => {
       [ 2, [ older, editOlder ] ],
     ]));
 
-    expect(editSpanLine(expanded)).toEqual([ 'stem', 'line', 'stem', 'line', 'none' ]);
+    expect(editSpanLine(expanded)).toEqual([ 'stem', 'end', 'stem', 'end', 'none' ]);
   });
 
   it('draws nothing while a checkpoint is collapsed', () => {

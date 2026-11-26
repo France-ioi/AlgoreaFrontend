@@ -73,6 +73,7 @@
               *cdkCellDef="let rowData; let i = index"
               [class.history-edits-stem]="editSpanMarks()[i] === 'stem'"
               [class.history-edits-line]="editSpanMarks()[i] === 'line'"
+              [class.history-edits-end]="editSpanMarks()[i] === 'end'"
             >
               @if (
                 rowData.kind === 'checkpoint'
@@ -92,7 +93,6 @@
                     [class.ph-caret-right]="!expansion.isExpanded(rowData.checkpoint.id)"
                     aria-hidden="true"
                   ></i>
-                  <span aria-hidden="true">{{ expansion.toggleCount(rowData) }}</span>
                 </button>
               }
             </td>
