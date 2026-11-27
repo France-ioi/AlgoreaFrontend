@@ -1,4 +1,5 @@
 import { Component, effect, input, signal } from '@angular/core';
+import { asapScheduler } from 'rxjs';
 import { isAChapter, isASkill, ItemTypeCategory } from 'src/app/items/models/item-type';
 import { areSameElements } from '../../models/routing/entity-route';
 import { NavTreeData, NavTreeElement } from '../../models/left-nav-loading/nav-tree-data';
@@ -14,7 +15,6 @@ import {
   CdkTreeModule,
   CdkTreeNodeDef,
   CdkTreeNodeOutlet,
-  NestedTreeControl
 } from '@angular/cdk/tree';
 import { resolveLeftNavIconForType, LeftNavElementType } from 'src/app/items/models/left-nav-icons';
 import { TooltipDirective } from 'src/app/ui-components/tooltip/tooltip.directive';
@@ -68,7 +68,18 @@ export class LeftNavTreeComponent {
   elementType = input<ItemTypeCategory | 'group'>('activity');
 
   nodes = signal<TreeNode<NavTreeElement>[]>([]);
-  treeControl = new NestedTreeControl<TreeNode<NavTreeElement>>(node => node.children);
+  childrenAccessor = (node: TreeNode<NavTreeElement>): TreeNode<NavTreeElement>[] => node.children ?? [];
+  /**
+   * Nodes are rebuilt on every data change and toggle, and the CDK tree never forgets the keys it has seen (expansion model,
+   * node registry), so key them by route rather than by object to keep those bounded. Path + id: the same item id may appear
+   * at two paths.
+   */
+  expansionKey = (node: TreeNode<NavTreeElement>): string => [ ...node.data.route.path, node.data.route.id ].join('/');
+  /**
+   * The CDK defaults `trackBy` to `expansionKey`; keep tracking by object so rebuilt nodes are re-rendered (on a mere identity
+   * change the CDK only swaps the template context, leaving the tree node, hence its children, on the previous object).
+   */
+  trackByNode = (_index: number, node: TreeNode<NavTreeElement>): TreeNode<NavTreeElement> => node;
 
   managershipTooltipCaptions = {
     descendant: $localize`You are a manager of one of the descendant of the group`,
@@ -128,6 +139,22 @@ export class LeftNavTreeComponent {
         nodes.map(n => (n == node ? { ...n, expanded: !n.expanded } : n))
       );
     } else this.selectNode(node);
+  }
+
+  /**
+   * The CDK tree keyboard handling (arrow keys, `*`) expands/collapses nodes in the tree's own expansion model, which drives
+   * `aria-expanded`. Expansion is owned by `node.expanded` (only the selected first-level folder may be toggled, by click), so
+   * undo any change that disagrees with it: the keyboard keeps having no visible effect and `aria-expanded` stays truthful.
+   * The undo is deferred: this event is emitted while the CDK's SelectionModel is still emitting, and changing it synchronously
+   * re-emits the pending change, which loops forever.
+   */
+  onTreeExpandedChange(node: TreeNode<NavTreeElement>, treeNode: CdkNestedTreeNode<TreeNode<NavTreeElement>>, expanded: boolean): void {
+    if (expanded === node.expanded) return;
+    asapScheduler.schedule(() => {
+      if (treeNode.isExpanded === node.expanded) return;
+      if (node.expanded) treeNode.expand();
+      else treeNode.collapse();
+    });
   }
 
   onChevronClick(event: Event, node: TreeNode<NavTreeElement>): void {
