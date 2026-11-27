@@ -48,6 +48,7 @@ Pass AXE checks and WCAG AA (focus, contrast, ARIA).
 ## Styling
 
 - Tokens in `src/variables.scss` (overridable per customer at deploy — see architecture map). Primary: `--alg-primary-color` (not `--alg-primary`). Always provide CSS-variable fallbacks.
+- Consume tokens with `var(--…)` only. Never `@use` `variables.scss` (any path) outside `src/styles.scss`: it outputs a copy of the default `:root` block per importing stylesheet, bloating component styles and risking reset of deploy-time customer overrides (see Theming in [item-descriptions.md](docs/architecture/item-descriptions.md)).
 - `functions.toRem()` for lengths; `@use 'src/assets/scss/functions'` at top of SCSS.
 - Component-owned `:host` / class bindings instead of `::ng-deep`; host styles live on the owning component.
 

@@ -2,6 +2,7 @@
 @use "sass:meta";
 @use 'assets/scss/helpers';
 @use 'src/geometry';
+// Only allowed importer of variables: emits the global :root token block once (see AGENTS.md, Styling).
 @use 'src/variables';
 @use "assets/scss/functions";
 
