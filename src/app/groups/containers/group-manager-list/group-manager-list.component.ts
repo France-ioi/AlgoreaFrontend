@@ -183,6 +183,7 @@ export class GroupManagerListComponent {
     const groupId = this.group().id;
     // Safety net: managers through an ancestor group only (canManage === null) cannot be removed from this group
     const removable = this.selection().filter(manager => manager.canManage !== null);
+    if (removable.length === 0) return;
     const ownManagerId = removable.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress.set(true);
