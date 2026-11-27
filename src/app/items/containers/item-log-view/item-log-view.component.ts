@@ -52,6 +52,7 @@ import { HistoryRestoreRequest } from '../../services/history-restore.request';
 import { HistoryModeChoice } from '../../services/history-mode-choice';
 import { canCurrentUserWatchAnswers } from 'src/app/items/models/item-watch-permission';
 import { opensTaskReadOnly } from 'src/app/items/models/task-read-only';
+import { areSubmissionsClosed } from 'src/app/items/models/attempts';
 
 @Component({
   selector: 'alg-item-log-view',
@@ -184,10 +185,12 @@ export class ItemLogViewComponent {
   });
 
   /** Whether a checkpoint/history-element button opens the task read-only ("Show") rather than editable ("Restore"). */
-  readonly restoreOpensReadOnly = computed(() =>
-    // Opening from History always clears the route's answer; the attempt does not affect the rule.
-    opensTaskReadOnly({}, historyTaskLoadFor(this.editsAttemptId() ?? '', this.observedUserId()))
-  );
+  readonly restoreOpensReadOnly = computed(() => {
+    // Opening from History always clears the route's answer. Own History loads the URL attempt (the current result).
+    const currentResult = this.itemData().currentResult;
+    const submissionsClosed = !!currentResult && areSubmissionsClosed(currentResult);
+    return opensTaskReadOnly({}, historyTaskLoadFor(this.editsAttemptId() ?? '', this.observedUserId()), submissionsClosed);
+  });
 
   readonly showModeSelection = computed(() =>
     shouldShowHistoryModeSelection(
