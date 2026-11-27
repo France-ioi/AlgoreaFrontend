@@ -566,7 +566,8 @@ test.describe('platform-task interaction', () => {
         can_watch_answer: true,
       }];
 
-      test('defaults to Events only, loads the observed attempt read-only, and restores without writing history', async ({ page }) => {
+      test('defaults to Events only, loads the observed attempt read-only, shows without writing history, and remembers Events & Edits',
+        async ({ page }) => {
         await mockTestTaskItemApi(page, {
           taskQuery: 'apiVersion=3&minApiVersion=1&savesHistory=1',
           canWatch: 'answer',
@@ -598,7 +599,9 @@ test.describe('platform-task interaction', () => {
         await testTaskPage.waitForCall('task.getHistory');
         await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
 
-        await page.getByRole('row').filter({ hasText: 'Manual' }).getByRole('button', { name: 'Restore' }).click();
+        const manualRow = page.getByRole('row').filter({ hasText: 'Manual' });
+        await expect(manualRow.getByRole('button', { name: 'Restore' })).toHaveCount(0);
+        await manualRow.getByRole('button', { name: 'Show', exact: true }).click();
         await expect(page).toHaveURL(/\/task\/editor/);
         const reload = await testTaskPage.waitForCall('task.reloadHistory');
         expect(reload.params).toEqual({ elementId: 3 });
@@ -606,11 +609,9 @@ test.describe('platform-task interaction', () => {
 
         await page.getByRole('link', { name: 'History' }).click();
         await expect(page).toHaveURL(/\/history/);
-        // Observer History always reopens on Events only; re-select edits to check history was not written.
-        await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events only' })).toHaveClass(/active/);
-        await page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits' }).click();
-        await testTaskPage.waitForCall('task.getHistory');
-        // Read-only restore must not push an Autosave checkpoint into the student's history.
+        // The explicit Events & Edits pick survives leaving History for another tab.
+        await expect(page.getByTestId('selection-control-value').filter({ hasText: 'Events & Edits' })).toHaveClass(/active/);
+        // Read-only Show must not push an Autosave checkpoint into the student's history.
         await expect(page.locator('.item-title-caption').first()).toContainText('Manual');
       });
 

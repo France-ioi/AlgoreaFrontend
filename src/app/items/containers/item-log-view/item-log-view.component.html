@@ -115,8 +115,12 @@
                             <span class="history-chars-removed">-{{ caption.removed }}</span>
                           </p>
                           <div class="history-row-actions">
-                            <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)" i18n>
-                              Restore
+                            <button type="button" class="alg-link" (click)="onRestore(rowData.checkpoint.id)">
+                              @if (restoreOpensReadOnly()) {
+                                <ng-container i18n>Show</ng-container>
+                              } @else {
+                                <ng-container i18n>Restore</ng-container>
+                              }
                             </button>
                           </div>
                         </div>
@@ -133,8 +137,12 @@
                             <span class="history-chars-removed">-{{ caption.removed }}</span>
                           </p>
                           <div class="history-row-actions">
-                            <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)" i18n>
-                              Restore
+                            <button type="button" class="alg-link" (click)="onRestore(rowData.edit.id)">
+                              @if (restoreOpensReadOnly()) {
+                                <ng-container i18n>Show</ng-container>
+                              } @else {
+                                <ng-container i18n>Restore</ng-container>
+                              }
                             </button>
                           </div>
                         </div>
