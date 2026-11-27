@@ -1,6 +1,6 @@
 import { combineLatest, Observable, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
-import equal from 'fast-deep-equal/es6';
+import { dequal as equal } from 'dequal';
 import { Store } from '@ngrx/store';
 import { GetItemByIdService } from 'src/app/data-access/get-item-by-id.service';
 import { ThreadId } from 'src/app/forum/models/threads';

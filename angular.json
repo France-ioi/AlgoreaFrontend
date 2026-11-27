@@ -28,6 +28,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "jschannel"
+            ],
             "outputPath": {
               "base": "dist/algorea"
             },

@@ -22,7 +22,7 @@ import {
 import { APPCONFIG } from 'src/app/config';
 import { SECONDS } from 'src/app/utils/duration';
 import { FullItemRoute } from 'src/app/models/routing/item-route';
-import equal from 'fast-deep-equal/es6';
+import { dequal as equal } from 'dequal';
 import { Task, taskProxyFromIframe, taskUrlWithParameters } from '../api/task-proxy';
 import { withNegotiatedMetadata } from '../api/task-api-version';
 import { Answer } from './item-task.service';
