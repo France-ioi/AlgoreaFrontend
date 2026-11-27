@@ -68,10 +68,19 @@
 
 @if (nodes().length > 0) {
   <div class="tree-nav-container">
-    <cdk-tree [dataSource]="nodes()" [treeControl]="treeControl">
+    <cdk-tree
+      [dataSource]="nodes()"
+      [childrenAccessor]="childrenAccessor"
+      [expansionKey]="expansionKey"
+      [trackBy]="trackByNode"
+    >
       <cdk-nested-tree-node
         *cdkTreeNodeDef="let node"
         class="tree-node"
+        [isExpandable]="node.isExpandable"
+        [isExpanded]="node.expanded"
+        #treeNode="cdkNestedTreeNode"
+        (expandedChange)="onTreeExpandedChange(node, treeNode, $event)"
       >
         @switch (node.type) {
           @case ('chapter') {
