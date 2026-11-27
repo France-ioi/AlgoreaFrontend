@@ -20,6 +20,7 @@ import { ItemEditPerm } from '../../models/item-edit-permission';
 import { ItemWatchPerm } from '../../models/item-watch-permission';
 import { TaskHistoryElement } from 'src/app/items/api/types';
 import { readyState } from 'src/app/utils/state';
+import { backendInfiniteDateString } from 'src/app/utils/date';
 import { provideRouter } from '@angular/router';
 
 const mockItem: Item = {
@@ -66,7 +67,7 @@ const mockItemData: ItemData = {
     validated: false,
     startedAt: new Date(),
     endedAt: null,
-    allowsSubmissionsUntil: new Date(),
+    allowsSubmissionsUntil: new Date(backendInfiniteDateString),
   },
 };
 
@@ -205,5 +206,16 @@ describe('ItemLogViewComponent history element button label', () => {
 
   it('shows "Restore" on checkpoint and history-element rows on the own History', () => {
     expect(rowButtonLabels(mockItemData)).toEqual([ 'Restore', 'Restore' ]);
+  });
+
+  it('shows "Show" on the own History when the attempt no longer accepts submissions', () => {
+    const closed: ItemData = {
+      ...mockItemData,
+      currentResult: {
+        attemptId: '0', latestActivityAt: new Date(), startedAt: new Date(), endedAt: null, score: 0, validated: false,
+        allowsSubmissionsUntil: new Date('2000-01-01T00:00:00Z'),
+      },
+    };
+    expect(rowButtonLabels(closed)).toEqual([ 'Show', 'Show' ]);
   });
 });

@@ -69,3 +69,8 @@ export function canCreateResults(item: Item): boolean {
 export function areSubmissionsClosed(result: Pick<Result, 'allowsSubmissionsUntil'>): boolean {
   return isPastDate(result.allowsSubmissionsUntil);
 }
+
+/** `areSubmissionsClosed` for an optional result: no result yet (no attempt selected) is not closed. */
+export function areSubmissionsClosedFor(result: Pick<Result, 'allowsSubmissionsUntil'> | undefined): boolean {
+  return !!result && areSubmissionsClosed(result);
+}
