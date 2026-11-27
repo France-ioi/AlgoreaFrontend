@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [v2.97.1](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.97.0...v2.97.1) - 2026-11-27
+
+- fix a closed attempt opening its task read-only again, matching the "This attempt is over" banner
+- history: label a read-only checkpoint or edit "Show", and keep the Events & Edits choice when switching tabs on the same item
+- history: while observing a group, stay on the group's activity log
+- history: checkpoints and edits share a save icon and diff-style change counts, opened from a chevron
+- fix the full-frame task layout taking over History and other tabs, and keep a menu choice after leaving full frame on a narrow screen
+
 ## [v2.97.0](https://github.com/France-ioi/AlgoreaFrontend/compare/v2.96.2...v2.97.0) - 2026-11-24
 
 - tasks using the new Bebras API v3 now keep their own work in progress instead of the platform's current-answer autosave
