@@ -1,0 +1,104 @@
+/*
+ * Trimmed Phosphor stylesheets for the "thin" and "fill" weights.
+ *
+ * Why: the full upstream stylesheets hold a rule for each of ~1,500 icons (~80 kB each), which pushed the
+ * initial bundle over its 2 MB budget. We only use a handful of icons in these two weights, so only those
+ * are declared here. Font files are unchanged and still load lazily.
+ *
+ * Covers: thin, fill. (regular, duotone and bold still use the full upstream stylesheets.)
+ *
+ * ADDING A THIN OR FILL ICON? Add its `:before` rule below, copying the code point from
+ * node_modules/@phosphor-icons/web/src/<weight>/style.css. Otherwise the icon silently renders nothing.
+ *
+ * Icons used: thin: caret-down, caret-right; fill: user-circle, lock-open.
+ */
+
+@font-face {
+  font-family: "Phosphor-Thin";
+  src:
+    url("../../../node_modules/@phosphor-icons/web/src/thin/Phosphor-Thin.woff2") format("woff2"),
+    url("../../../node_modules/@phosphor-icons/web/src/thin/Phosphor-Thin.woff") format("woff"),
+    url("../../../node_modules/@phosphor-icons/web/src/thin/Phosphor-Thin.ttf") format("truetype"),
+    url("../../../node_modules/@phosphor-icons/web/src/thin/Phosphor-Thin.svg#Phosphor-Thin") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.ph-thin {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "Phosphor-Thin" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ph-thin.ph-caret-down:before {
+  content: "\e136";
+}
+
+.ph-thin.ph-caret-right:before {
+  content: "\e13a";
+}
+
+@font-face {
+  font-family: "Phosphor-Fill";
+  src:
+    url("../../../node_modules/@phosphor-icons/web/src/fill/Phosphor-Fill.woff2") format("woff2"),
+    url("../../../node_modules/@phosphor-icons/web/src/fill/Phosphor-Fill.woff") format("woff"),
+    url("../../../node_modules/@phosphor-icons/web/src/fill/Phosphor-Fill.ttf") format("truetype"),
+    url("../../../node_modules/@phosphor-icons/web/src/fill/Phosphor-Fill.svg#Phosphor-Fill") format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.ph-fill {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: "Phosphor-Fill" !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Enable Ligatures ================ */
+  letter-spacing: 0;
+  -webkit-font-feature-settings: "liga";
+  -moz-font-feature-settings: "liga=1";
+  -moz-font-feature-settings: "liga";
+  -ms-font-feature-settings: "liga" 1;
+  font-feature-settings: "liga";
+  -webkit-font-variant-ligatures: discretionary-ligatures;
+  font-variant-ligatures: discretionary-ligatures;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ph-fill.ph-user-circle:before {
+  content: "\e4c4";
+}
+
+.ph-fill.ph-lock-open:before {
+  content: "\e306";
+}

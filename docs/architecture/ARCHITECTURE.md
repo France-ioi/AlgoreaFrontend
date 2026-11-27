@@ -194,6 +194,10 @@ interface AppConfig {
 
 Left-menu tab behaviour: [left-nav.md](left-nav.md). Auth modes: [auth.md](auth.md).
 
+## Icons
+
+Icons are Phosphor web fonts, one global stylesheet per weight (`angular.json` `styles`). Regular, duotone and bold use the full upstream stylesheets. **Thin and fill use the trimmed [`src/assets/scss/phosphor-trimmed.css`](../../src/assets/scss/phosphor-trimmed.css)**, which only declares the icons in use (to keep the initial bundle under its 2 MB budget). A new `ph-thin` or `ph-fill` icon needs its `:before` rule added there (code point from the upstream `style.css`), otherwise it renders blank.
+
 ## Internationalization
 
 Angular i18n (`@angular/localize`) + Crowdin; locale via URL path prefix; languages in `config.js`. Temp users: `LanguageMismatchComponent` auto-aligns once per load via `UserLanguageService` when profile `defaultLanguage` differs from the site language; logged-in users get the language-mismatch modal.
