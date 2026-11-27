@@ -39,7 +39,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { Subject, filter, map, merge, of, take, timer } from 'rxjs';
 import { catchError, exhaustMap, switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { areSubmissionsClosed } from '../../models/attempts';
+import { areSubmissionsClosedFor } from '../../models/attempts';
 import { ItemRouter } from 'src/app/models/routing/item-router';
 import { itemRoute } from 'src/app/models/routing/item-route';
 import { MessageService } from 'src/app/services/message.service';
@@ -132,7 +132,7 @@ export class ItemContentComponent implements PendingChangesComponent {
    */
   submissionsClosed = computed(() => {
     const { currentResult, route } = this.itemData();
-    return !!currentResult && !route.observedGroup && areSubmissionsClosed(currentResult);
+    return !route.observedGroup && areSubmissionsClosedFor(currentResult);
   });
 
   /**

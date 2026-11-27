@@ -26,7 +26,7 @@ import { isATask } from 'src/app/items/models/item-type';
 import { FetchState, readyState } from 'src/app/utils/state';
 import { readyData } from 'src/app/utils/operators/state';
 import { isNotNull } from 'src/app/utils/null-undefined-predicates';
-import { areSubmissionsClosed } from './models/attempts';
+import { areSubmissionsClosedFor } from './models/attempts';
 import { ItemData } from './models/item-data';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { HistoryTaskLoadRequest } from './services/history-task-load.request';
@@ -83,10 +83,10 @@ export class ItemTaskFlowService implements OnDestroy {
     map(data => ({
       isTask: isATask(data.item),
       route: data.route,
-      // Snapshot the clock here (not in the comparator, which would re-read it for both sides): a refresh after the
-      // deadline passes must re-emit a read-only config. ItemTaskInitService forbids flipping readOnly on a live
-      // config, so item-content remounts the display on the flip.
-      submissionsClosed: !!data.currentResult && areSubmissionsClosed(data.currentResult),
+      // Snapshot the clock here (not in the comparator, which would re-read it for both sides): the first ready
+      // emission after the deadline (normally the time-limited end refresh) re-emits a read-only config.
+      // ItemTaskInitService forbids flipping readOnly on a live config, so item-content remounts the display on the flip.
+      submissionsClosed: areSubmissionsClosedFor(data.currentResult),
     })),
     distinctUntilChanged((x, y) =>
       JSON.stringify(x.route) === JSON.stringify(y.route) && x.submissionsClosed === y.submissionsClosed

@@ -7,7 +7,7 @@ import { ItemRouter } from 'src/app/models/routing/item-router';
 import { ConfirmationModalService } from 'src/app/services/confirmation-modal.service';
 import { LocaleService } from 'src/app/services/localeService';
 import { backendInfiniteDateString } from 'src/app/utils/date';
-import { readyState } from 'src/app/utils/state';
+import { fetchingState, readyState } from 'src/app/utils/state';
 import { ItemTaskFlowService } from './item-task-flow.service';
 import { mockItem } from './mocks/item-by-id';
 import { Result } from './models/attempts';
@@ -94,6 +94,9 @@ describe('ItemTaskFlowService – read-only task config for a closed attempt', (
 
   it('switches to read-only when a refresh shows the deadline has passed while the page is open', () => {
     setup(openDeadline);
+    // refresh() refetches: the item data goes through fetching before it is ready again.
+    store.overrideSelector(fromItemContent.selectActiveContentData, fetchingState());
+    store.refreshState();
     store.overrideSelector(fromItemContent.selectActiveContentData, readyState(itemData(closedDeadline)));
     store.refreshState();
     expect(configs.at(-1)?.readOnly).toBeTrue();
