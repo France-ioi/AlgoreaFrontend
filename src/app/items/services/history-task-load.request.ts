@@ -6,6 +6,11 @@ export interface HistoryTaskLoad {
   observedParticipantId?: string,
 }
 
+/** The load History requests for an attempt: the observed user's attempt when observing one, else the own one. */
+export function historyTaskLoadFor(attemptId: string, observedUserId: string | null): HistoryTaskLoad {
+  return observedUserId ? { attemptId, observedParticipantId: observedUserId } : { attemptId };
+}
+
 /**
  * History asks the item host to load a task attempt while the History page stays visible.
  * Clearing this does not unload a task that already loaded.
@@ -14,12 +19,8 @@ export interface HistoryTaskLoad {
 export class HistoryTaskLoadRequest {
   readonly pending = signal<HistoryTaskLoad | null>(null);
 
-  /** Own-user load (editable) when `observedParticipantId` is omitted. */
-  request(attemptId: string, options?: { observedParticipantId: string }): void {
-    this.pending.set({
-      attemptId,
-      observedParticipantId: options?.observedParticipantId,
-    });
+  request(load: HistoryTaskLoad): void {
+    this.pending.set(load);
   }
 
   /** Convenience for templates that only need the attempt id. */

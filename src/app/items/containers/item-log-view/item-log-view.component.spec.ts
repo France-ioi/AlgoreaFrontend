@@ -18,6 +18,9 @@ import { ItemViewPerm } from '../../models/item-view-permission';
 import { ItemGrantViewPerm } from '../../models/item-grant-view-permission';
 import { ItemEditPerm } from '../../models/item-edit-permission';
 import { ItemWatchPerm } from '../../models/item-watch-permission';
+import { TaskHistoryElement } from 'src/app/items/api/types';
+import { readyState } from 'src/app/utils/state';
+import { provideRouter } from '@angular/router';
 
 const mockItem: Item = {
   id: '1',
@@ -136,5 +139,71 @@ describe('ItemLogViewComponent.backLinkHeading', () => {
     store.overrideSelector(fromObservation.selectObservedGroupInfo, groupObsInfo);
     store.refreshState();
     expect(component.backLinkHeading()).toBe('You are now on the history page of group Team Phoenix.');
+  });
+});
+
+describe('ItemLogViewComponent history element button label', () => {
+  let fixture: ComponentFixture<ItemLogViewComponent>;
+
+  function element(id: number, isCheckpoint: boolean): TaskHistoryElement {
+    return {
+      id,
+      datetime: '2026-01-01T10:00:00Z',
+      tags: [],
+      idUser: 'u1',
+      isCheckpoint,
+      sinceEarlier: { charsAdded: 3, charsRemoved: 1 },
+      ...(isCheckpoint ? { sinceEarlierCheckpoint: { charsAdded: 3, charsRemoved: 1, elementsCount: 1 } } : {}),
+      activeTab: { name: 'main.py', length: 20, progLang: 'python' },
+    };
+  }
+
+  /** Renders one checkpoint row with one history element expanded under it; returns the row button labels. */
+  function rowButtonLabels(itemData: ItemData): string[] {
+    fixture = TestBed.createComponent(ItemLogViewComponent);
+    const component = fixture.componentInstance;
+    fixture.componentRef.setInput('itemData', itemData);
+    fixture.detectChanges();
+    const checkpoint = element(2, true);
+    component.mode.set('events_and_edits');
+    component.editsState.set(readyState([{ kind: 'checkpoint', at: new Date(checkpoint.datetime), checkpoint }]));
+    component.expansion.expandedEdits.set(new Map([[ 2, [ element(1, false) ] ]]));
+    fixture.detectChanges();
+    const buttons = (fixture.nativeElement as HTMLElement).querySelectorAll('.history-row-actions button');
+    return Array.from(buttons, button => button.textContent?.trim() ?? '');
+  }
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ ItemLogViewComponent ],
+      providers: [
+        provideMockStore({
+          selectors: [
+            { selector: fromItemContent.selectBackLink, value: null },
+            { selector: fromObservation.selectObservedGroupInfo, value: null },
+            { selector: fromObservation.selectIsObserving, value: false },
+            { selector: fromObservation.selectObservedGroupId, value: null },
+            { selector: fromObservation.selectObservedGroupRoute, value: null },
+          ],
+        }),
+        { provide: ActivityLogService, useValue: { getActivityLog: () => EMPTY } },
+        { provide: UserSessionService, useValue: { userProfile$: of({ groupId: 'me' }) } },
+        { provide: ActionFeedbackService, useValue: { error: jasmine.createSpy('error') } },
+        { provide: ItemRouter, useValue: { url: () => undefined } },
+        provideRouter([]),
+      ],
+    }).compileComponents();
+  });
+
+  it('shows "Show" on checkpoint and history-element rows while observing a user', () => {
+    const observing: ItemData = {
+      ...mockItemData,
+      route: { ...mockItemData.route, observedGroup: { id: 'u1', isUser: true } },
+    };
+    expect(rowButtonLabels(observing)).toEqual([ 'Show', 'Show' ]);
+  });
+
+  it('shows "Restore" on checkpoint and history-element rows on the own History', () => {
+    expect(rowButtonLabels(mockItemData)).toEqual([ 'Restore', 'Restore' ]);
   });
 });

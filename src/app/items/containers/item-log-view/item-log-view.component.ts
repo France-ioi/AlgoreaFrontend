@@ -37,7 +37,7 @@ import { HistoryListRow, activityLogsToEventRows } from './history-list-merge';
 import { checkpointCaption, editCaption } from './history-checkpoint-caption';
 import { editSpanLine, HistoryDisplayRow, insertExpandedEdits } from './history-list-edits';
 import { HistoryCheckpointExpansion } from './history-checkpoint-expansion';
-import { HistoryModeMemory, chooseHistoryMode, followHistoryMode } from './history-mode-sync';
+import { HistoryModeActions, HistoryModeMemory, chooseHistoryMode, followHistoryMode } from './history-mode-sync';
 import { HistoryEditsFacade } from './history-edits-facade';
 import { fetchAllActivityLog, fetchAttemptActivityLog$ } from './history-edits-load';
 import { historyEditsPageSize } from './history-edits-pager';
@@ -47,9 +47,11 @@ import {
   newestActivityLogAttemptId, observerEditsAttemptId,
   shouldShowHistoryModeSelection,
 } from './history-view-mode';
-import { HistoryTaskLoadRequest } from '../../services/history-task-load.request';
+import { HistoryTaskLoadRequest, historyTaskLoadFor } from '../../services/history-task-load.request';
 import { HistoryRestoreRequest } from '../../services/history-restore.request';
+import { HistoryModeChoice } from '../../services/history-mode-choice';
 import { canCurrentUserWatchAnswers } from 'src/app/items/models/item-watch-permission';
+import { opensTaskReadOnly } from 'src/app/items/models/task-read-only';
 
 @Component({
   selector: 'alg-item-log-view',
@@ -73,6 +75,7 @@ export class ItemLogViewComponent {
   private loadedTaskRegistry = inject(ItemLoadedTaskRegistry, { optional: true });
   private historyTaskLoad = inject(HistoryTaskLoadRequest, { optional: true });
   private restoreRequest = inject(HistoryRestoreRequest, { optional: true });
+  private modeChoice = inject(HistoryModeChoice, { optional: true }) ?? new HistoryModeChoice();
   private destroyRef = inject(DestroyRef);
 
   itemData = input.required<ItemData>();
@@ -100,6 +103,7 @@ export class ItemLogViewComponent {
     userChoseEventsOnly: false,
     seenNavigationKey: '',
     pendingEditsLoad: false,
+    awaitingEditsAttempt: false,
   };
   readonly expansion = new HistoryCheckpointExpansion();
   private readonly editsReload$ = new Subject<void>();
@@ -179,6 +183,12 @@ export class ItemLogViewComponent {
     );
   });
 
+  /** Whether a checkpoint/history-element button opens the task read-only ("Show") rather than editable ("Restore"). */
+  readonly restoreOpensReadOnly = computed(() =>
+    // Opening from History always clears the route's answer; the attempt does not affect the rule.
+    opensTaskReadOnly({}, historyTaskLoadFor(this.editsAttemptId() ?? '', this.observedUserId()))
+  );
+
   readonly showModeSelection = computed(() =>
     shouldShowHistoryModeSelection(
       this.itemData().item.type,
@@ -234,17 +244,14 @@ export class ItemLogViewComponent {
       const observingGroup = this.observingGroup();
       untracked(() => followHistoryMode(
         this.modeMemory,
+        this.modeChoice,
         nav,
         editsAttemptId,
         loaded,
         observedUserId,
         observingGroup,
         this.mode(),
-        {
-          clearExpansions: () => this.expansion.clear(),
-          applyMode: next => this.applyMode(next),
-          reload: () => this.editsReload$.next(),
-        },
+        this.modeActions(observedUserId),
       ));
     });
 
@@ -276,20 +283,13 @@ export class ItemLogViewComponent {
     const observedUserId = this.observedUserId();
     chooseHistoryMode(
       this.modeMemory,
+      this.modeChoice,
       this.mode(),
       option.value,
       this.editsAttemptId(),
       this.loadedTask(),
       observedUserId,
-      {
-        clearExpansions: () => this.expansion.clear(),
-        applyMode: next => this.applyMode(next),
-        showEditsLoading: () => {
-          this.mode.set('events_and_edits');
-          this.editsState.set(fetchingState());
-        },
-        loadTask: attemptId => this.requestTaskLoad(attemptId, observedUserId),
-      },
+      this.modeActions(observedUserId),
     );
   }
 
@@ -345,6 +345,19 @@ export class ItemLogViewComponent {
   readonly activityRowMark = activityRowMark;
   readonly editCaption = editCaption;
 
+  private modeActions(observedUserId: string | null): HistoryModeActions {
+    return {
+      clearExpansions: () => this.expansion.clear(),
+      applyMode: next => this.applyMode(next),
+      showEditsLoading: (): void => {
+        this.mode.set('events_and_edits');
+        this.editsState.set(fetchingState());
+      },
+      loadTask: attemptId => this.requestTaskLoad(attemptId, observedUserId),
+      reload: () => this.editsReload$.next(),
+    };
+  }
+
   private applyMode(next: HistoryViewMode): void {
     this.mode.set(next);
     if (next === 'events') this.resetRows();
@@ -362,9 +375,6 @@ export class ItemLogViewComponent {
         useCurrentObservation: true,
       });
     }
-    this.historyTaskLoad?.request(
-      attemptId,
-      observedUserId ? { observedParticipantId: observedUserId } : undefined,
-    );
+    this.historyTaskLoad?.request(historyTaskLoadFor(attemptId, observedUserId));
   }
 }

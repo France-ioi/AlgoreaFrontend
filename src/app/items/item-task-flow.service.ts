@@ -30,6 +30,7 @@ import { ItemData } from './models/item-data';
 import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { HistoryTaskLoadRequest } from './services/history-task-load.request';
 import { TaskConfig } from './services/item-task.service';
+import { opensTaskReadOnly } from './models/task-read-only';
 import { fromItemContent } from './store';
 
 export const selectState = createSelector(
@@ -89,20 +90,13 @@ export class ItemTaskFlowService implements OnDestroy {
         this.historyPending$,
       ]).pipe(
         map(([ initialAnswer, historyPending ]) => {
+          const readOnly = opensTaskReadOnly(route, historyPending);
           // Viewing a specific answer wins over History's observed-user load.
-          if (route.answer) {
-            return { readOnly: true, initialAnswer, locale: userLocale };
-          }
-          const observedParticipantId = historyPending?.observedParticipantId;
+          const observedParticipantId = route.answer ? undefined : historyPending?.observedParticipantId;
           if (observedParticipantId) {
-            return {
-              readOnly: true,
-              initialAnswer: null,
-              locale: userLocale,
-              observedParticipantId,
-            };
+            return { readOnly, initialAnswer: null, locale: userLocale, observedParticipantId };
           }
-          return { readOnly: false, initialAnswer, locale: userLocale };
+          return { readOnly, initialAnswer, locale: userLocale };
         }),
       );
     }),

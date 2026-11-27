@@ -27,6 +27,7 @@ import { InitialAnswerDataSource } from './services/initial-answer-datasource';
 import { ItemLoadedTaskRegistry } from './services/item-loaded-task-registry';
 import { HistoryTaskLoadRequest } from './services/history-task-load.request';
 import { HistoryRestoreRequest } from './services/history-restore.request';
+import { HistoryModeChoice } from './services/history-mode-choice';
 import { TabService } from 'src/app/services/tab.service';
 import { ItemTabs } from './item-tabs';
 import { LoadingComponent } from 'src/app/ui-components/loading/loading.component';
@@ -69,6 +70,7 @@ import { isScoreForRoute, ScoreChange } from './models/score-change';
     ItemLoadedTaskRegistry,
     HistoryTaskLoadRequest,
     HistoryRestoreRequest,
+    HistoryModeChoice,
   ],
   imports: [
     ItemHeaderComponent,
