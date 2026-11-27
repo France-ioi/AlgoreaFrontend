@@ -3,7 +3,6 @@
 
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 // Define a mock appConfig for the test environment
 const mockAppConfig = {
@@ -49,7 +48,7 @@ beforeEach(() => {
 
 // First, initialize the Angular testing environment.
 getTestBed().initTestEnvironment(
-  [ BrowserDynamicTestingModule, NoopAnimationsModule ],
+  BrowserDynamicTestingModule,
   platformBrowserDynamicTesting(), {
     teardown: { destroyAfterEach: false }
   }
