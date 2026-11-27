@@ -130,8 +130,9 @@
                 type="checkbox"
                 class="alg-table-footer-checkbox"
                 id="select-all-checkbox"
-                (change)="onSelectAll(managers)"
-                [checked]="managers.length === selection().length"
+                (change)="onSelectAll(currentGroupManagers)"
+                [checked]="areAllSelected(currentGroupManagers)"
+                [disabled]="currentGroupManagers.length === 0"
               />
               <span class="alg-table-footer-select-all" i18n>
                 Select all
