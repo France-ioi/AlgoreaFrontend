@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { initialState, State } from './current-content.state';
 import { contentPageActions } from './current-content.actions';
-import equal from 'fast-deep-equal/es6';
+import { dequal as equal } from 'dequal';
 
 export const reducer = createReducer(
   initialState,

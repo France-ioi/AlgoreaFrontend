@@ -5,7 +5,7 @@ import { FullItemRoute, ItemContentIdentifier, ItemRoute, resultsFetchKey } from
 import { Breadcumbs, Item, State, initialState } from './item-content.state';
 import { FetchState, errorState, fetchingState, readyState } from 'src/app/utils/state';
 import { ItemData } from '../../models/item-data';
-import equal from 'fast-deep-equal/es6';
+import { dequal as equal } from 'dequal';
 import { Result } from '../../models/attempts';
 import { isItemRouteError, ItemRouteError, parseItemUrlSegments } from 'src/app/models/routing/item-route-serialization';
 import { fromConfig } from 'src/app/store/config';

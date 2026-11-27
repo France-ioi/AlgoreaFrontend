@@ -22,7 +22,7 @@ import { UserSessionService } from 'src/app/services/user-session.service';
 import { FullItemRoute, resultsFetchKey } from 'src/app/models/routing/item-route';
 import { ItemPath } from 'src/app/models/ids';
 import { isArrayPrefix } from 'src/app/utils/array';
-import equal from 'fast-deep-equal/es6';
+import { dequal as equal } from 'dequal';
 
 // Results are chained from the root, so a start on a prefix creates results on the route's ancestors, and a start on an
 // extension creates results on the route itself. Both change the breadcrumbs.
