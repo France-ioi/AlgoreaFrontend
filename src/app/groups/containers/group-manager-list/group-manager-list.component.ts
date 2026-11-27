@@ -136,12 +136,14 @@ export class GroupManagerListComponent {
     this.datapager.load();
   }
 
-  onSelectAll(managers: Manager[]): void {
-    if (this.selection().length === managers.length) {
-      this.selection.set([]);
-      return;
-    }
-    this.selection.set(managers);
+  /** Whether every selectable manager is selected (false when there is none). */
+  areAllSelected(selectableManagers: Manager[]): boolean {
+    const selection = this.selection();
+    return selectableManagers.length > 0 && selectableManagers.every(manager => selection.includes(manager));
+  }
+
+  onSelectAll(selectableManagers: Manager[]): void {
+    this.selection.set(this.areAllSelected(selectableManagers) ? [] : selectableManagers);
   }
 
   onSelect(item: Manager): void {
@@ -179,7 +181,9 @@ export class GroupManagerListComponent {
     }
 
     const groupId = this.group().id;
-    const ownManagerId = this.selection().find(manager => manager.id === currentUserId)?.id;
+    // Safety net: managers through an ancestor group only (canManage === null) cannot be removed from this group
+    const removable = this.selection().filter(manager => manager.canManage !== null);
+    const ownManagerId = removable.find(manager => manager.id === currentUserId)?.id;
 
     this.removalInProgress.set(true);
 
@@ -196,7 +200,7 @@ export class GroupManagerListComponent {
       switchMap(() =>
         this.removeGroupManagerService.removeBatch(
           groupId,
-          this.selection().filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
+          removable.filter(manager => manager.id !== ownManagerId).map(manager => manager.id),
           ownManagerId,
         )
       ),
